@@ -7,25 +7,8 @@ clean() {
     rm org/haldean/chopper/server/*.java\~
 }
 
-new() {
-    echo Download new version
-    wget http://pices.dynalias.org/server.tar.gz || curl http://pices.dynalias.org/server.tar.gz > server.tar.gz
-    echo Extract
-    rm -r org unit
-    tar xvf server.tar.gz
-}
-
 if [ 'clean' == "$1" ]; then
     clean
-    exit
-fi
-
-if [ 'new' == "$1" ]; then
-    new
-fi
-
-if [ 'update' == "$1" ]; then
-    new
     exit
 fi
 
