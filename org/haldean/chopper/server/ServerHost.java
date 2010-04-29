@@ -10,6 +10,7 @@ public class ServerHost extends JFrame {
     public final DataReceiver r;
     public final LocationComponent lc;
     public final TiltComponent tc;
+    public final ImageComponent ic;
     public final UpdatableTextArea status;
     private final String hostPort[];
 
@@ -21,6 +22,7 @@ public class ServerHost extends JFrame {
 	r = DataReceiver.getInstance();
 	lc = new LocationComponent();
 	tc = new TiltComponent();
+	ic = new ImageComponent();
 	status = new UpdatableTextArea();
 
 	String hostPortString = JOptionPane.showInputDialog("Hostname and port of server machine");
@@ -33,6 +35,7 @@ public class ServerHost extends JFrame {
 
 	r.tie(sp);
 	r.tie(status);
+	r.tieImage(ic);
 
 	//r.tie(new EchoUpdatable());
     }
@@ -59,7 +62,7 @@ public class ServerHost extends JFrame {
 
 	/* The right/left pane creator */
 	JPanel horizontalPanel = new JPanel(new GridLayout(1,2));
-	horizontalPanel.add(lc);
+	horizontalPanel.add(ic);
 	add(horizontalPanel);
 
 	/* The right pane */

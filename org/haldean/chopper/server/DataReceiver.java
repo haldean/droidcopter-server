@@ -24,12 +24,17 @@ public class DataReceiver implements Runnable {
 
     public String serverAddr;
     public int dataPort; 
+    public int imgPort;
     
     private Socket dataConnection;
     private BufferedReader data;
     private BufferedWriter output;
 
+    private Socket imgConnection;
+    private ObjectInputStream image;
+
     private LinkedList<Updatable> tied;
+    private ImageComponent imageTied;
     private boolean isConnected;
     private boolean stopThread;
 
@@ -53,9 +58,18 @@ public class DataReceiver implements Runnable {
 	tied.add(u);
     }
 
+    public void tieImage(ImageComponent i) {
+	imageTied = i;
+    }
+
     private void updateAll(String msg) {
-	for (int i=0; i<tied.size(); i++)
-	    tied.get(i).update(msg);
+	if (msg.startsWith("IMAGE")) {
+	    String[] messageParts = msg.split(":");
+	    ImageReceiver r = new ImageReceiver(image, new Integer(messageParts[1]), imageTied);
+	    new Thread(r).start();
+	} else
+	    for (int i=0; i<tied.size(); i++)
+		tied.get(i).update(msg);
     }
 
     public boolean connected() {
@@ -94,6 +108,7 @@ public class DataReceiver implements Runnable {
 		    throw new IOException();
 
 		dataConnection = new Socket(serverAddr, dataPort);
+		imgConnection = new Socket(serverAddr, imgPort);
 		data = new BufferedReader( new InputStreamReader(dataConnection.getInputStream()));
 		output = new BufferedWriter(new OutputStreamWriter(dataConnection.getOutputStream())); 
 		
