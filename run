@@ -1,0 +1,43 @@
+#!/bin/bash
+
+clean() {
+    echo Clean old classfiles
+    rm org/haldean/chopper/server/*.class
+    echo Clean backup java files
+    rm org/haldean/chopper/server/*.java\~
+}
+
+new() {
+    echo Download new version
+    wget http://pices.dynalias.org/server.tar.gz || curl http://pices.dynalias.org/server.tar.gz > server.tar.gz
+    echo Extract
+    rm -r org unit
+    tar xvf server.tar.gz
+}
+
+if [ 'clean' == "$1" ]; then
+    clean
+    exit
+fi
+
+if [ 'new' == "$1" ]; then
+    new
+fi
+
+if [ 'update' == "$1" ]; then
+    new
+    exit
+fi
+
+clean
+
+if [ 'pack' == "$1" ]; then
+    echo Creating archive
+    tar -czf server.tar.gz org unit
+else
+    javac -cp jars/trident.jar:jars/substance.jar:. \
+	org/haldean/chopper/server/ServerHost.java && \
+	echo Compiled && \
+	java -cp jars/trident.jar:jars/substance.jar:. \
+	org.haldean.chopper.server.ServerHost debug
+fi

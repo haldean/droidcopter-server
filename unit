@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+    echo Must supply a class to test
+else
+    echo "Running test for class $1"
+    javac "org/haldean/chopper/server/$1.java" && \
+	echo Compiled && \
+	java "org.haldean.chopper.server.$1"
+fi
