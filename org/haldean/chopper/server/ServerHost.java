@@ -27,7 +27,7 @@ public class ServerHost extends JFrame {
 
 	String hostPortString = JOptionPane.showInputDialog("Hostname and port of server machine");
 	hostPort = hostPortString.split(":");
-	r.initialize(hostPort[0], new Integer(hostPort[1]));
+	r.initialize(hostPort[0], new Integer(hostPort[1]), new Integer(hostPort[1]) + 1);
 
 	SensorParser sp = new SensorParser();
 	sp.setLocationComponent(lc);

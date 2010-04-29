@@ -7,7 +7,7 @@ public class ImageReceiver implements Runnable {
     int len;
     ImageComponent imageComp;
     
-    public void ImageReceiver(ObjectInputStream _in, Integer _len, ImageComponent _imageComp) {
+    public ImageReceiver(ObjectInputStream _in, Integer _len, ImageComponent _imageComp) {
 	in = _in;
 	len = _len;
 	imageComp = _imageComp;

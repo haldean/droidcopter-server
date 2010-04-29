@@ -38,9 +38,10 @@ public class DataReceiver implements Runnable {
     private boolean isConnected;
     private boolean stopThread;
 
-    public void initialize(String _serverAddr, int _dataPort) {
+    public void initialize(String _serverAddr, int _dataPort, int _imgPort) {
 	serverAddr = _serverAddr;
 	dataPort = _dataPort;
+	imgPort = _imgPort;
 
 	tied = new LinkedList<Updatable>();
 	stopThread = false;
@@ -107,8 +108,11 @@ public class DataReceiver implements Runnable {
 		if (serverAddr == null)
 		    throw new IOException();
 
+		Debug.log("Connecting on " + serverAddr + " ports " + dataPort + " and " + imgPort);
 		dataConnection = new Socket(serverAddr, dataPort);
 		imgConnection = new Socket(serverAddr, imgPort);
+
+		image = new ObjectInputStream(imgConnection.getInputStream());
 		data = new BufferedReader( new InputStreamReader(dataConnection.getInputStream()));
 		output = new BufferedWriter(new OutputStreamWriter(dataConnection.getOutputStream())); 
 		
@@ -125,11 +129,10 @@ public class DataReceiver implements Runnable {
 		isConnected = false;
 	    } catch (IOException e) {
 		isConnected = false;
+		e.printStackTrace();
 		System.err.println("Error initializing sockets: " + e.toString());
-		JOptionPane.showMessageDialog(null, "Error: Could not connect to control server. " +
-					      "Will sleep 2 seconds then retry", "Error", JOptionPane.ERROR_MESSAGE);
 		try {
-		    Thread.sleep(2000);
+		    Thread.sleep(5000);
 		} catch (InterruptedException exception) {
 		    return;
 		}
