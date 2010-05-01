@@ -64,13 +64,23 @@ public class DataReceiver implements Runnable {
     }
 
     private void updateAll(String msg) {
-	if (msg.startsWith("IMAGE")) {
-	    String[] messageParts = msg.split(":");
-	    ImageReceiver r = new ImageReceiver(image, new Integer(messageParts[1]), imageTied);
-	    new Thread(r).start();
-	} else
+	if (msg.startsWith("IMAGE"))
+	    receiveImage(msg);
+	else
 	    for (int i=0; i<tied.size(); i++)
 		tied.get(i).update(msg);
+    }
+
+    private void receiveImage(String msg) {
+	try {
+	    image = new ObjectInputStream(imgConnection.getInputStream());
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
+
+	String[] messageParts = msg.split(":");
+	ImageReceiver r = new ImageReceiver(image, new Integer(messageParts[1]), imageTied);
+	new Thread(r).start();
     }
 
     public boolean connected() {
@@ -112,7 +122,6 @@ public class DataReceiver implements Runnable {
 		dataConnection = new Socket(serverAddr, dataPort);
 		imgConnection = new Socket(serverAddr, imgPort);
 
-		image = new ObjectInputStream(imgConnection.getInputStream());
 		data = new BufferedReader( new InputStreamReader(dataConnection.getInputStream()));
 		output = new BufferedWriter(new OutputStreamWriter(dataConnection.getOutputStream())); 
 		

@@ -14,15 +14,17 @@ public class ImageReceiver implements Runnable {
     }
 
     public void run() {
+	Debug.log("Receiving image");
 	byte[] imageData = new byte[len];
 
 	try{
 	    /* Copy buffer contents to byte array */
 	    in.readFully(imageData);
+	    imageComp.setImage(imageData);
+	    in.close();
+	    Debug.log("Image received");
 	} catch (IOException e) {
 	    e.printStackTrace();
 	}
-
-	imageComp.setImage(imageData);
     }
 }

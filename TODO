@@ -1,0 +1,20 @@
+
+* TODO First Programming Iteration
+** TODO Automatic Frame Rate Compensation				   :Ben:
+** TODO Data receiver on chopper					   :Ben:
+** TODO Data transmitter on host					  :Will:
+** TODO Authentication on server					  :Will:
+** TODO Teach Ben git							  :Will:
+** TODO Flight control							  :Will:
+** TODO Stability							   :Ben:
+** TODO Navigation							   :Ben:
+** TODO Host commands							  :Will:
+** TODO Raw statistics							  :Will:
+*** Visualization of bounds and accuracy
+** TODO Acceleration visualization					  :Will:
+** TODO Pressure sensor as altimeter					  :Will:
+
+* TODO First Hardware Iteration
+** TODO Radio control of motors						  :Will:
+** TODO Serial port from Arduino to Droid				  :Will:
+** TODO Buy hardware							  :Both:

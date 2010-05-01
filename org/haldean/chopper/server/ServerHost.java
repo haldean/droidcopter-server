@@ -62,7 +62,10 @@ public class ServerHost extends JFrame {
 
 	/* The right/left pane creator */
 	JPanel horizontalPanel = new JPanel(new GridLayout(1,2));
-	horizontalPanel.add(ic);
+	JTabbedPane leftTabs = new JTabbedPane();
+	leftTabs.add("GPS", lc);
+	leftTabs.add("Telemetry", ic);
+	horizontalPanel.add(leftTabs);
 	add(horizontalPanel);
 
 	/* The right pane */
