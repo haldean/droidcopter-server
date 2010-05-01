@@ -4,7 +4,7 @@
 ** TODO Data receiver on chopper					   :Ben:
 ** TODO Data transmitter on host					  :Will:
 ** TODO Authentication on server					  :Will:
-** TODO Teach Ben git							  :Will:
+** PROGRESS Teach Ben git 						  :Will:
 ** TODO Flight control							  :Will:
 ** TODO Stability							   :Ben:
 ** TODO Navigation							   :Ben:
@@ -18,3 +18,4 @@
 ** TODO Radio control of motors						  :Will:
 ** TODO Serial port from Arduino to Droid				  :Will:
 ** TODO Buy hardware							  :Both:
+
