@@ -11,6 +11,7 @@ public class ServerHost extends JFrame {
     public final LocationComponent lc;
     public final TiltComponent tc;
     public final ImageComponent ic;
+    public final AccelerationComponent ac;
     public final UpdatableTextArea status;
     private final String hostPort[];
 
@@ -23,6 +24,7 @@ public class ServerHost extends JFrame {
 	lc = new LocationComponent();
 	tc = new TiltComponent();
 	ic = new ImageComponent();
+	ac = new AccelerationComponent();
 	status = new UpdatableTextArea();
 
 	String hostPortString = JOptionPane.showInputDialog("Hostname and port of server machine");
@@ -32,6 +34,7 @@ public class ServerHost extends JFrame {
 	SensorParser sp = new SensorParser();
 	sp.setLocationComponent(lc);
 	sp.setTiltComponent(tc);
+	sp.setAccelerationComponent(ac);
 
 	r.tie(sp);
 	r.tie(status);
@@ -116,6 +119,7 @@ public class ServerHost extends JFrame {
 	/* Assemble tab pane for right panel */
 	JTabbedPane rightTabPane = new JTabbedPane(JTabbedPane.TOP);
 	rightTabPane.add("Orientation", tc);
+	rightTabPane.add("Acceleration", ac);
 	rightTabPane.add("Raw Input", status.getComponent());
 
 	/* Assemble right panel */

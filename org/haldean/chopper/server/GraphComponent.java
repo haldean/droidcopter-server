@@ -10,9 +10,9 @@ import java.awt.*;
  */
 public class GraphComponent extends JComponent {
     private LinkedList<Double> series;
-    private double max = 0;
-    private double min = 0;
-    private final int sampleCount = 1000;
+    private double max = 1;
+    private double min = -1;
+    private final int sampleCount = 300;
 
     private final Color background = new Color(28, 25, 20);
     private final Color line = Color.white;
@@ -39,13 +39,15 @@ public class GraphComponent extends JComponent {
      *  @param r The result set to add 
      */
     public void addPoint(double p) {
-	series.add(new Double(p));
-	if (p > max)
-	    max = p;
-	if (p < min)
-	    min = p;
-	while (series.size() > sampleCount)
-	    series.removeFirst();
+	synchronized (series) {
+	    series.add(new Double(p));
+	    if (p > max)
+		max = p;
+	    if (p < min)
+		min = p;
+	    while (series.size() > sampleCount)
+		series.removeFirst();
+	}
 	repaint();
     }
 
@@ -76,11 +78,13 @@ public class GraphComponent extends JComponent {
 	g2.drawLine(0, pointToY(0), (int) getSize().getWidth(), pointToY(0));
 
 	g2.setColor(line);
-	double lastY = series.get(0);
-	for (int i=1; i<series.size(); i++) {
-	    double y = series.get(i);
-	    g2.drawLine(pointToX(i-1), pointToY(lastY), pointToX(i), pointToY(y));
-	    lastY = y;
+	synchronized (series) {
+	    double lastY = series.get(0);
+	    for (int i=1; i<series.size(); i++) {
+		double y = series.get(i);
+		g2.drawLine(pointToX(i-1), pointToY(lastY), pointToX(i), pointToY(y));
+		lastY = y;
+	    }
 	}
     }
 

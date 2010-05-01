@@ -66,9 +66,8 @@ public class DataReceiver implements Runnable {
     private void updateAll(String msg) {
 	if (msg.startsWith("IMAGE"))
 	    receiveImage(msg);
-	else
-	    for (int i=0; i<tied.size(); i++)
-		tied.get(i).update(msg);
+	for (int i=0; i<tied.size(); i++)
+	    tied.get(i).update(msg);
     }
 
     private void receiveImage(String msg) {

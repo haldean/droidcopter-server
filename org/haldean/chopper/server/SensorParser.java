@@ -7,9 +7,9 @@ public class SensorParser implements Updatable {
     private final int ROLL = 1;
 	
     //m/s^2:
-    private final int XACCEL = 3;
-    private final int YACCEL = 4;
-    private final int ZACCEL = 5;
+    private final int XACCEL = 1;
+    private final int YACCEL = 2;
+    private final int ZACCEL = 3;
 
     private final int ALT = 1;
     private final int BEARING = 2;
@@ -20,6 +20,7 @@ public class SensorParser implements Updatable {
 
     private LocationComponent gps;
     private TiltComponent orient;
+    private AccelerationComponent accel;
 
     public SensorParser() {
 	;
@@ -31,6 +32,10 @@ public class SensorParser implements Updatable {
 
     public void setTiltComponent(TiltComponent _orient) {
 	orient = _orient;
+    }
+
+    public void setAccelerationComponent(AccelerationComponent _accel) {
+	accel = _accel;
     }
 
     public void update(String msg) {
@@ -51,6 +56,11 @@ public class SensorParser implements Updatable {
 					    new Double(parts[TILT]),
 					    new Double(parts[PITCH]));
 	    orient.setTilt(o);
+	}
+	if (parts[0].equals("ACCEL")) {
+	    accel.setAcceleration(new Double(parts[XACCEL]),
+				  new Double(parts[YACCEL]),
+				  new Double(parts[ZACCEL]));
 	}
     }
 }
