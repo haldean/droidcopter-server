@@ -2,6 +2,7 @@ package org.haldean.chopper.server;
 
 import java.awt.*;
 import javax.swing.*;
+import java.util.LinkedList;
 
 public class AccelerationComponent extends JPanel {
     private GraphComponent xAccel;
@@ -37,6 +38,7 @@ public class AccelerationComponent extends JPanel {
 	statsPanel.add(xLabel);
 	statsPanel.add(yLabel);
 	statsPanel.add(zLabel);
+	statsPanel.add(avgLabel);
 
 	add(xAccel);
 	add(yAccel);
@@ -44,8 +46,14 @@ public class AccelerationComponent extends JPanel {
 	add(statsPanel);
     }
 
+    public void updateUI() {
+	super.updateUI();
+	if (statsPanel != null)
+	    statsPanel.updateUI();
+    }
+
     private double average() {
-	double sum;
+	double sum = 0;
 	int i;
 	for (i=0; i<points.size(); i++)
 	    sum += points.get(i);
@@ -54,8 +62,8 @@ public class AccelerationComponent extends JPanel {
     }
 
     public void setAcceleration(double x, double y, double z) {
-	double mag = Math.sqrt(Math.pow(x, 2),
-			       Math.pow(y, 2),
+	double mag = Math.sqrt(Math.pow(x, 2) +
+			       Math.pow(y, 2) +
 			       Math.pow(z, 2));
 	points.add(mag);
 	while (points.size() > averagePointCount)

@@ -79,11 +79,13 @@ public class GraphComponent extends JComponent {
 
 	g2.setColor(line);
 	synchronized (series) {
-	    double lastY = series.get(0);
-	    for (int i=1; i<series.size(); i++) {
-		double y = series.get(i);
-		g2.drawLine(pointToX(i-1), pointToY(lastY), pointToX(i), pointToY(y));
-		lastY = y;
+	    if (series.size() > 0) {
+		double lastY = series.get(0);
+		for (int i=1; i<series.size(); i++) {
+		    double y = series.get(i);
+		    g2.drawLine(pointToX(i-1), pointToY(lastY), pointToX(i), pointToY(y));
+		    lastY = y;
+		}
 	    }
 	}
     }
