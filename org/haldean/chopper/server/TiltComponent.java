@@ -7,7 +7,7 @@ public class TiltComponent extends JComponent {
     private Orientation tilt;
 
     private final Color line1 = Color.white;
-    private final Color line2 = Color.red;
+    private final Color line2 = Color.lightGray;
     private final Color background = new Color(28, 25, 20);
 
     public TiltComponent() {
