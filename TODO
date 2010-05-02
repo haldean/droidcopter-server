@@ -1,17 +1,24 @@
-
+#+TODO: TODO PROGRESS | DONE
 * TODO First Programming Iteration
 ** TODO Automatic Frame Rate Compensation				   :Ben:
 ** TODO Data receiver on chopper					   :Ben:
 ** TODO Data transmitter on host					  :Will:
 ** TODO Authentication on server					  :Will:
-** DONE Teach Ben git 						  :Will:
+** DONE Teach Ben git							  :Will:
+   CLOSED: [2010-05-02 Sun 10:31]
 ** TODO Flight control							  :Will:
 ** TODO Stability							   :Ben:
 ** TODO Navigation							   :Ben:
 ** TODO Host commands							  :Will:
 ** TODO Raw statistics							  :Will:
 *** Visualization of bounds and accuracy
-** TODO Acceleration visualization					  :Will:
+** PROGRESS Acceleration visualization					  :Will:
+*** Graphs of acceleration over time
+*** Graph labels
+*** Textual data
+**** Running average
+**** Delta from running average
+**** Accuracy
 ** TODO Pressure sensor as altimeter					  :Will:
 
 * TODO First Hardware Iteration

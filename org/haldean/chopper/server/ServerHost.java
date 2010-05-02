@@ -62,6 +62,7 @@ public class ServerHost extends JFrame {
 	/* Update the Look and Feel of components created
 	 * in the constructor */
 	status.updateUI();
+	ac.updateUI();
 
 	/* The right/left pane creator */
 	JPanel horizontalPanel = new JPanel(new GridLayout(1,2));
