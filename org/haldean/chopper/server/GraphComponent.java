@@ -12,14 +12,26 @@ public class GraphComponent extends JComponent {
     private LinkedList<Double> series;
     private double max = 1;
     private double min = -1;
-    private final int sampleCount = 300;
+    private double margin = 1;
 
-    private final Color background = new Color(28, 25, 20);
-    private final Color line = Color.white;
-    private final Color axes = Color.darkGray;
+    private int sampleCount = 100;
+    private int firstIndex = 0;
+
+    private Color background = new Color(28, 25, 20);
+    private Color border = Color.darkGray;
+    private Color line = Color.white;
+    private Color axes = Color.lightGray;
+    private Font labelFont = new Font(Font.SANS_SERIF, Font.PLAIN, 10);
+
+    private String name;
 
     public GraphComponent() {
+	this(new String());
+    }
+
+    public GraphComponent(String _name) {
 	super();
+	name = _name;
 	series = new LinkedList<Double>();
     }
 
@@ -33,6 +45,16 @@ public class GraphComponent extends JComponent {
 	repaint();
     }
 
+    public void setName(String _name) {
+	name = _name;
+	repaint();
+    }
+
+    public void setSampleCount(int _sampleCount) {
+	sampleCount = _sampleCount;
+	repaint();
+    }
+
     /**
      *  Adds a result set to the graph as its own series. Note that results added
      *  MUST BE SORTED in ascending order.
@@ -41,12 +63,11 @@ public class GraphComponent extends JComponent {
     public void addPoint(double p) {
 	synchronized (series) {
 	    series.add(new Double(p));
-	    if (p > max)
-		max = p;
-	    if (p < min)
-		min = p;
-	    while (series.size() > sampleCount)
-		series.removeFirst();
+	    firstIndex = Math.max(0, series.size() - sampleCount);
+	    if (p > (max - margin))
+		max = p + margin;
+	    if (p < (min + margin))
+		min = p - margin;
 	}
 	repaint();
     }
@@ -66,25 +87,38 @@ public class GraphComponent extends JComponent {
     public void paintComponent(Graphics g) {
 	Graphics2D g2 = (Graphics2D)g;
 
+	int width = (int) getSize().getWidth();
+	int height = (int) getSize().getHeight();
+	int y0 = pointToY(0);
+
 	/* Background */
 	g2.setColor(background);
-	g2.fillRect(0, 0, (int) getSize().getWidth(), (int) getSize().getHeight());
+	g2.fillRect(0, 0, width, height);
 
-	/* Axes */
-	g2.setColor(axes);
-	/* Vertical axis */
-	g2.drawLine(0, 0, 0, (int) getSize().getHeight());
+	/* Border */
+	g2.setColor(border);
+	g2.drawRect(0, 0, width, height);
+
 	/* Horizontal axis */
-	g2.drawLine(0, pointToY(0), (int) getSize().getWidth(), pointToY(0));
+	g2.setColor(axes);
+	g2.drawLine(0, y0, width, y0);
+
+	/* Graph label */
+	g2.setFont(labelFont);
+	g2.drawString(name, 1, y0 - 2);
 
 	g2.setColor(line);
 	synchronized (series) {
 	    if (series.size() > 0) {
-		double lastY = series.get(0);
-		for (int i=1; i<series.size(); i++) {
-		    double y = series.get(i);
-		    g2.drawLine(pointToX(i-1), pointToY(lastY), pointToX(i), pointToY(y));
+		int lastY = pointToY(series.get(firstIndex));
+		int lastX = pointToX(0);
+		for (int i=firstIndex; i<series.size() && i < (firstIndex + sampleCount); i++) {
+		    int y = pointToY(series.get(i));
+		    int x = pointToX(i - firstIndex);
+
+		    g2.drawLine(lastX, lastY, x, y);
 		    lastY = y;
+		    lastX = x;
 		}
 	    }
 	}
@@ -92,8 +126,9 @@ public class GraphComponent extends JComponent {
 
     public static void main(String args[]) {
 	JFrame f = new JFrame();
-	final GraphComponent gc = new GraphComponent();
+	final GraphComponent gc = new GraphComponent("Amplifying Sine");
 	gc.setPreferredSize(new Dimension(700, 400));
+	gc.setSampleCount(2000);
 	f.add(gc);
 	f.pack();
 	f.setVisible(true);
