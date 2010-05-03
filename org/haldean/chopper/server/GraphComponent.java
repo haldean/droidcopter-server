@@ -52,6 +52,7 @@ public class GraphComponent extends JComponent {
 
     public void setSampleCount(int _sampleCount) {
 	sampleCount = _sampleCount;
+	firstIndex = Math.max(0, series.size() - sampleCount);
 	repaint();
     }
 

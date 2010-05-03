@@ -21,6 +21,7 @@ public class SensorParser implements Updatable {
     private LocationComponent gps;
     private TiltComponent orient;
     private AccelerationComponent accel;
+    private SensorComponent sensors;
 
     public SensorParser() {
 	;
@@ -37,6 +38,10 @@ public class SensorParser implements Updatable {
     public void setAccelerationComponent(AccelerationComponent _accel) {
 	accel = _accel;
     }
+    
+    public void setSensorComponent(SensorComponent _sensors) {
+	sensors = _sensors;
+    }
 
     public void update(String msg) {
 	String parts[] = msg.split(":");
@@ -51,16 +56,33 @@ public class SensorParser implements Updatable {
 		gps.addWaypoint(w);
 	    }
 	}
-	if (parts[0].equals("ORIENT")) {
+
+	else if (parts[0].equals("ORIENT")) {
 	    Orientation o = new Orientation(new Double(parts[ROLL]),
 					    new Double(parts[TILT]),
 					    new Double(parts[PITCH]));
 	    orient.setTilt(o);
 	}
-	if (parts[0].equals("ACCEL")) {
+
+	else if (parts[0].equals("ACCEL")) {
 	    accel.setAcceleration(new Double(parts[XACCEL]),
 				  new Double(parts[YACCEL]),
 				  new Double(parts[ZACCEL]));
 	}
+
+	else if (parts[0].equals("FLUX"))
+	    sensors.setFlux(new Double(parts[1]));
+
+	else if (parts[0].equals("LIGHT"))
+	    sensors.setLight(new Double(parts[1]));
+
+	else if (parts[0].equals("PROXIMITY"))
+	    sensors.setProximity(new Double(parts[1]));
+
+	else if (parts[0].equals("PRESSURE"))
+	    sensors.setPressure(new Double(parts[1]));
+
+	else if (parts[0].equals("TEMPERATURE"))
+	    sensors.setTemperature(new Double(parts[1]));
     }
 }

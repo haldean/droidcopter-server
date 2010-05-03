@@ -14,6 +14,7 @@ public class ServerHost extends JFrame {
     public final AccelerationComponent ac;
     public final UpdatableTextArea status;
     public final UpdatableTextArea debug;
+    public final SensorComponent sc;
     private final String hostPort[];
 
     public ServerHost(String s) {
@@ -26,6 +27,7 @@ public class ServerHost extends JFrame {
 	tc = new TiltComponent();
 	ic = new ImageComponent();
 	ac = new AccelerationComponent();
+	sc = new SensorComponent();
 	status = new UpdatableTextArea();
 	debug = new UpdatableTextArea();
 
@@ -44,6 +46,7 @@ public class ServerHost extends JFrame {
 	sp.setLocationComponent(lc);
 	sp.setTiltComponent(tc);
 	sp.setAccelerationComponent(ac);
+	sp.setSensorComponent(sc);
 
 	r.tie(sp);
 	r.tie(status);
@@ -73,6 +76,7 @@ public class ServerHost extends JFrame {
 	status.updateUI();
 	debug.updateUI();
 	ac.updateUI();
+	sc.updateUI();
 
 	/* The right/left pane creator */
 	JPanel horizontalPanel = new JPanel(new GridLayout(1,2));
@@ -131,6 +135,7 @@ public class ServerHost extends JFrame {
 	JTabbedPane rightTabPane = new JTabbedPane(JTabbedPane.TOP);
 	rightTabPane.add("Orientation", tc);
 	rightTabPane.add("Acceleration", ac);
+	rightTabPane.add("Sensors", sc);
 	rightTabPane.add("Raw Input", status);
 	rightTabPane.add("Debug Info", debug);
 
