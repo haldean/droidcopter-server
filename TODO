@@ -2,7 +2,8 @@
 * TODO First Programming Iteration
 ** TODO Automatic Frame Rate Compensation				   :Ben:
 ** TODO Data receiver on chopper					   :Ben:
-** TODO Data transmitter on host					  :Will:
+** DONE Data transmitter on host 					  :Will:
+   CLOSED: [2010-05-02 Sun 21:00]
 ** TODO Authentication on server					  :Will:
 ** DONE Teach Ben git							  :Will:
    CLOSED: [2010-05-02 Sun 10:31]
@@ -12,7 +13,8 @@
 ** TODO Host commands							  :Will:
 ** TODO Raw statistics							  :Will:
 *** Visualization of bounds and accuracy
-** PROGRESS Acceleration visualization					  :Will:
+** DONE Acceleration visualization					  :Will:
+   CLOSED: [2010-05-02 Sun 21:00]
 *** Graphs of acceleration over time
 *** Graph labels
 *** Textual data
