@@ -73,8 +73,7 @@ public class DataReceiver implements Runnable {
     }
 
     private void receiveImage(String msg) {
-	String[] messageParts = msg.split(":");
-	ImageReceiver r = new ImageReceiver(image, new Integer(messageParts[1]), imageTied);
+	ImageReceiver r = new ImageReceiver(image, msg, imageTied);
 	new Thread(r).start();
     }
 
