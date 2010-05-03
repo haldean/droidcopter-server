@@ -3,28 +3,27 @@ package org.haldean.chopper.server;
 import java.awt.*;
 import javax.swing.*;
 
-public class UpdatableTextArea implements Updatable {
+public class UpdatableTextArea extends JPanel implements Updatable {
     private JTextArea area;
     private JScrollPane scroll;
+    private JCheckBox scrollLock;
 
     public UpdatableTextArea() {
-	super();
-    }
+	super(new BorderLayout());
 
-    private void initialize() {
-	if (area == null) {
-	    area = new JTextArea();
-	    area.setEditable(false);
-	    scroll = new JScrollPane(area);
-	}
+	area = new JTextArea();
+	area.setEditable(false);
+	scroll = new JScrollPane(area);
+	scrollLock = new JCheckBox("Scroll Lock", false);
+	scrollLock.setSelected(true);
+
+	add(scroll, BorderLayout.CENTER);
+	add(scrollLock, BorderLayout.SOUTH);
     }
 
     public void update(String msg) {
-	initialize();
-	boolean keepUp = ((float) ((float) scroll.getVerticalScrollBar().getValue() / 
-			   (float) scroll.getVerticalScrollBar().getMaximum()) > 0.75);
 	area.setText(area.getText() + "\n" + msg);
-	if (keepUp) {
+	if (scrollLock.isSelected()) {
 	    try {
 		SwingUtilities.invokeAndWait(new Runnable() {
 			public void run() {
@@ -37,14 +36,13 @@ public class UpdatableTextArea implements Updatable {
 	}
     }
 
-    public JComponent getComponent() {
-	initialize();
-	return (JComponent) scroll;
-    }
-
     public void updateUI() {
-	initialize();
-	scroll.updateUI();
-	area.updateUI();
+	if (scrollLock != null) {
+	    area.updateUI();
+	    scroll.updateUI();
+	    scroll.getVerticalScrollBar().updateUI();
+	    scrollLock.updateUI();
+	}
+	super.updateUI();
     }
 }

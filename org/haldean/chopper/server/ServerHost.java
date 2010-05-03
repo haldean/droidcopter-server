@@ -13,9 +13,10 @@ public class ServerHost extends JFrame {
     public final ImageComponent ic;
     public final AccelerationComponent ac;
     public final UpdatableTextArea status;
+    public final UpdatableTextArea debug;
     private final String hostPort[];
 
-    public ServerHost() {
+    public ServerHost(String s) {
 	super();
 	setTitle(heloName + " Control Server");
 
@@ -26,8 +27,16 @@ public class ServerHost extends JFrame {
 	ic = new ImageComponent();
 	ac = new AccelerationComponent();
 	status = new UpdatableTextArea();
+	debug = new UpdatableTextArea();
 
-	String hostPortString = JOptionPane.showInputDialog("Hostname and port of server machine");
+	Debug.setDebugOut(debug);
+
+	String hostPortString;
+	if (s == null)
+	    hostPortString = JOptionPane.showInputDialog("Hostname and port of server machine");
+	else
+	    hostPortString = s;
+	Debug.log("hostPortString is " + hostPortString);
 	hostPort = hostPortString.split(":");
 	r.initialize(hostPort[0], new Integer(hostPort[1]), new Integer(hostPort[1]) + 1);
 
@@ -62,6 +71,7 @@ public class ServerHost extends JFrame {
 	/* Update the Look and Feel of components created
 	 * in the constructor */
 	status.updateUI();
+	debug.updateUI();
 	ac.updateUI();
 
 	/* The right/left pane creator */
@@ -121,7 +131,8 @@ public class ServerHost extends JFrame {
 	JTabbedPane rightTabPane = new JTabbedPane(JTabbedPane.TOP);
 	rightTabPane.add("Orientation", tc);
 	rightTabPane.add("Acceleration", ac);
-	rightTabPane.add("Raw Input", status.getComponent());
+	rightTabPane.add("Raw Input", status);
+	rightTabPane.add("Debug Info", debug);
 
 	/* Assemble right panel */
 	rawDataPanel.add(titleLabel, BorderLayout.NORTH);
@@ -136,12 +147,18 @@ public class ServerHost extends JFrame {
     }
 
     public static void main(String args[]) throws Exception {
+	String serverURI = null;
 	if (args.length > 0 && args[0].equals("debug"))
 	    Debug.enable = true;
-	else
-	    Debug.enable = false;
+	else {
+	    if (args.length > 1 && args[1].equals("debug")) {
+		Debug.enable = true;
+		serverURI = args[0];
+	    } else
+		Debug.enable = false;
+	}
 
-	final ServerHost s = new ServerHost();
+	final ServerHost s = new ServerHost(serverURI);
       	/* Set Look and Feel */
 	SwingUtilities.invokeAndWait(new Runnable() {
 		public void run() {

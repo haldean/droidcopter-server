@@ -131,11 +131,11 @@ public class AccelerationComponent extends JPanel {
 	magAccel.addPoint(mag);
 	avgAccel.addPoint(avg);
 
-	xLabel.setText("<html><b>a_X</b>: " + x + "</html>");
-	yLabel.setText("<html><b>a_Y</b>: " + y + "</html>");
-	zLabel.setText("<html><b>a_Z</b>: " + z + "</html>");
-	avgLabel.setText("<html><b>a_avg</b>: " + avg + "</html>");
-	deltaLabel.setText("<html><b>\u03B4a</b>: " + (avg - mag) + "</html>"); 
+	xLabel.setText("<html><b>Fx</b>: " + x + " N</html>");
+	yLabel.setText("<html><b>Fy</b>: " + y + " N</html>");
+	zLabel.setText("<html><b>Fz</b>: " + z + " N</html>");
+	avgLabel.setText("<html><b>|Favg|</b>: " + avg + " N</html>");
+	deltaLabel.setText("<html><b>|Favg - F|</b>: " + (avg - mag) + " N</html>"); 
 
 	repaint();
     }

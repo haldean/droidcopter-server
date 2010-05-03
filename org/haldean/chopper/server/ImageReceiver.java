@@ -1,29 +1,34 @@
 package org.haldean.chopper.server;
 
 import java.io.*;
+import java.net.*;
 
 public class ImageReceiver implements Runnable {
-    ObjectInputStream in;
+    ObjectInputStream ostream;
     int len;
     ImageComponent imageComp;
     
     public ImageReceiver(ObjectInputStream _in, Integer _len, ImageComponent _imageComp) {
-	in = _in;
+	super();
+
 	len = _len;
 	imageComp = _imageComp;
+	ostream = _in;
+
+	if (ostream == null) 
+	    Debug.log("ImageReceiver was given a null InputStream");
     }
 
     public void run() {
-	Debug.log("Receiving image");
+	Debug.log("Receiving image length " + len);
 	byte[] imageData = new byte[len];
 
-	try{
-	    /* Copy buffer contents to byte array */
-	    in.readFully(imageData);
+	try {
+	    ostream.readFully(imageData);
 	    imageComp.setImage(imageData);
-	    in.close();
+
 	    Debug.log("Image received");
-	} catch (IOException e) {
+	} catch (Exception e) {
 	    e.printStackTrace();
 	}
     }

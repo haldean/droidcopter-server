@@ -128,7 +128,7 @@ public class GraphComponent extends JComponent {
 	JFrame f = new JFrame();
 	final GraphComponent gc = new GraphComponent("Amplifying Sine");
 	gc.setPreferredSize(new Dimension(700, 400));
-	gc.setSampleCount(2000);
+	gc.setSampleCount(720);
 	f.add(gc);
 	f.pack();
 	f.setVisible(true);

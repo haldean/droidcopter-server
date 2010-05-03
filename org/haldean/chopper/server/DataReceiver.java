@@ -50,6 +50,8 @@ public class DataReceiver implements Runnable {
 	try {
 	    if (dataConnection != null)
 		dataConnection.close();
+	    if (imgConnection != null)
+		imgConnection.close();
 	} catch (IOException e) {
 	    e.printStackTrace();
 	}
@@ -71,12 +73,6 @@ public class DataReceiver implements Runnable {
     }
 
     private void receiveImage(String msg) {
-	try {
-	    image = new ObjectInputStream(imgConnection.getInputStream());
-	} catch (IOException e) {
-	    e.printStackTrace();
-	}
-
 	String[] messageParts = msg.split(":");
 	ImageReceiver r = new ImageReceiver(image, new Integer(messageParts[1]), imageTied);
 	new Thread(r).start();
@@ -121,8 +117,10 @@ public class DataReceiver implements Runnable {
 		dataConnection = new Socket(serverAddr, dataPort);
 		imgConnection = new Socket(serverAddr, imgPort);
 
-		data = new BufferedReader( new InputStreamReader(dataConnection.getInputStream()));
+		data = new BufferedReader(new InputStreamReader(dataConnection.getInputStream()));
 		output = new BufferedWriter(new OutputStreamWriter(dataConnection.getOutputStream())); 
+
+		image = new ObjectInputStream(imgConnection.getInputStream());
 		
 		isConnected = true;
 		sendln("Can I get in on this party?");
@@ -134,6 +132,7 @@ public class DataReceiver implements Runnable {
 		sendln("Server disconnected.");
 
 		dataConnection.close();
+		imgConnection.close();
 		isConnected = false;
 	    } catch (IOException e) {
 		isConnected = false;
