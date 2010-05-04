@@ -119,7 +119,6 @@ public class ServerHost extends JFrame {
 	statusPanel.add(quitButton);
 	quitButton.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-		    Debug.log("Exiting gracefully.");
 		    r.die();
 		    try {
 			while (r.connected())

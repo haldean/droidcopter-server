@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export CLASSPATH=`ls -1 jars/*.jar jars/worldwind/*.jar | xargs | sed "s/ /:/g"`:.
+
 clean() {
     echo "Clean old classfiles" 1>&2
     rm org/haldean/chopper/server/*.class
@@ -18,9 +20,7 @@ if [ 'pack' == "$1" ]; then
     echo "Creating archive" 1>&2
     tar -czf server.tar.gz org unit
 else
-    javac -cp jars/trident.jar:jars/substance.jar:. \
-	org/haldean/chopper/server/ServerHost.java && \
+    javac org/haldean/chopper/server/ServerHost.java && \
 	echo "Compiled" 1>&2 && \
-	java -cp jars/trident.jar:jars/substance.jar:. \
-	org.haldean.chopper.server.ServerHost "pices.dynalias.org:23" debug
+	java org.haldean.chopper.server.ServerHost "pices.dynalias.org:23" debug
 fi

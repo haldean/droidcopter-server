@@ -3,6 +3,7 @@ package org.haldean.chopper.server;
 import java.net.*;
 import java.io.*;
 import java.util.*;
+import java.util.zip.*;
 import javax.swing.JOptionPane;
 
 /* A singleton class to receive data from the chopper */
@@ -73,7 +74,11 @@ public class DataReceiver implements Runnable {
     }
 
     private void receiveImage(String msg) {
-	ImageReceiver r = new ImageReceiver(image, msg, imageTied);
+	ImageReceiver r = new ImageReceiver(image, msg, imageTied, new Callback() {
+		public void completed() {
+		    sendln("IMAGE:RECEIVED");
+		}
+	    });
 	new Thread(r).start();
     }
 
@@ -120,6 +125,8 @@ public class DataReceiver implements Runnable {
 		output = new BufferedWriter(new OutputStreamWriter(dataConnection.getOutputStream())); 
 
 		image = new ObjectInputStream(imgConnection.getInputStream());
+
+		Debug.log("Connected");
 		
 		isConnected = true;
 		sendln("Can I get in on this party?");
@@ -127,6 +134,7 @@ public class DataReceiver implements Runnable {
 		String in;
 		while (! stopThread && (in = data.readLine()) != null)
 		    updateAll(in);
+		    
 		System.out.println("Disconnected");
 		sendln("Server disconnected.");
 

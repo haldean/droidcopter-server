@@ -1,10 +1,13 @@
 #!/bin/bash
 
+export CLASSPATH=`ls -1 jars/*.jar jars/worldwind/*.jar | xargs | sed "s/ /:/g"`:.
+echo "$CLASSPATH"
+
 if [ -z "$1" ]; then
-    echo Must supply a class to test
+    echo "Must supply a class to test" 1>&2
 else
-    echo "Running test for class $1"
-    javac "org/haldean/chopper/server/$1.java" && \
-	echo Compiled && \
-	java "org.haldean.chopper.server.$1"
+    echo "Running test for class $1" 1>&2
+    javac -cp $CLASSPATH "org/haldean/chopper/server/$1.java" && \
+	echo "Compiled" 1>&2 && \
+	java -cp $CLASSPATH "org.haldean.chopper.server.$1"
 fi
