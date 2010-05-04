@@ -1,7 +1,9 @@
 #+TODO: TODO PROGRESS | DONE
 * TODO First Programming Iteration
-** TODO Automatic Frame Rate Compensation				   :Ben:
-** TODO Data receiver on chopper					   :Ben:
+** DONE Automatic Frame Rate Compensation				   :Ben:
+   CLOSED: [2010-05-03 Mon 22:18]*
+** DONE Data receiver on chopper					   :Ben:
+   CLOSED: [2010-05-03 Mon 22:19]
 ** DONE Data transmitter on host 					  :Will:
    CLOSED: [2010-05-02 Sun 21:00]
 ** TODO Authentication on server					  :Will:
@@ -22,9 +24,11 @@
 **** Delta from running average
 **** Accuracy
 ** TODO Pressure sensor as altimeter					  :Will:
+** TODO Transmit battery data						   :Ben:
+** TODO Visualize battery data						  :Will:
 
 * TODO First Hardware Iteration
 ** TODO Radio control of motors						  :Will:
 ** TODO Serial port from Arduino to Droid				  :Will:
 ** TODO Buy hardware							  :Both:
-
+** TODO Pressure sensor

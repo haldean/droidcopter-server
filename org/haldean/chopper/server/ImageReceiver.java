@@ -36,8 +36,6 @@ public class ImageReceiver implements Runnable {
 
 	    imageComp.setImage(imageData);
 	    imageComp.setCaptureTime(time);
-
-	    Debug.log("Image received");
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}

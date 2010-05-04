@@ -54,6 +54,8 @@ public class ImageComponent extends JComponent {
 	    float scale = (float) width / (float) img.getWidth();
 	    transform = AffineTransform.getScaleInstance(scale, scale);
 	    g2.drawImage(img, transform, null);
+	
+	    g2.drawString("Size: " + (int) img.getWidth() + "x" + (int) img.getHeight(), 1, height - 10);
 	}
 	
 	g2.setColor(labelColor);

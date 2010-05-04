@@ -9,5 +9,5 @@ else
     echo "Running test for class $1" 1>&2
     javac -cp $CLASSPATH "org/haldean/chopper/server/$1.java" && \
 	echo "Compiled" 1>&2 && \
-	java -cp $CLASSPATH "org.haldean.chopper.server.$1"
+	java -Djava.library.path=jars/worldwind/ -cp $CLASSPATH "org.haldean.chopper.server.$1"
 fi
