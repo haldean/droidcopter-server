@@ -8,7 +8,7 @@ import javax.swing.event.*;
 public class ServerHost extends JFrame {
     public final String heloName = new String("Chopper");
     public final DataReceiver r;
-    public final LocationComponent lc;
+    public final WorldWindComponent lc;
     public final TiltComponent tc;
     public final ImageComponent ic;
     public final AccelerationComponent ac;
@@ -23,7 +23,7 @@ public class ServerHost extends JFrame {
 
 	Debug.log("Server exists in thread " + Thread.currentThread().getName());
 	r = DataReceiver.getInstance();
-	lc = new LocationComponent();
+	lc = new WorldWindComponent();
 	tc = new TiltComponent();
 	ic = new ImageComponent();
 	ac = new AccelerationComponent();
@@ -43,7 +43,7 @@ public class ServerHost extends JFrame {
 	r.initialize(hostPort[0], new Integer(hostPort[1]), new Integer(hostPort[1]) + 1);
 
 	SensorParser sp = new SensorParser();
-	sp.setLocationComponent(lc);
+	sp.setWorldWindComponent(lc);
 	sp.setTiltComponent(tc);
 	sp.setAccelerationComponent(ac);
 	sp.setSensorComponent(sc);
@@ -77,6 +77,7 @@ public class ServerHost extends JFrame {
 	debug.updateUI();
 	ac.updateUI();
 	sc.updateUI();
+	lc.updateUI();
 
 	/* The right/left pane creator */
 	JPanel horizontalPanel = new JPanel(new GridLayout(1,2));
@@ -145,6 +146,7 @@ public class ServerHost extends JFrame {
 	horizontalPanel.add(rawDataPanel);
 
 	/* Show the frame */
+	setPreferredSize(new Dimension(1280, 700));
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	pack();
 	setVisible(true);

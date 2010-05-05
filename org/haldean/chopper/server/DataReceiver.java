@@ -74,6 +74,14 @@ public class DataReceiver implements Runnable {
     }
 
     private void receiveImage(String msg) {
+	try {
+	    if (image == null)
+		image = new ObjectInputStream(imgConnection.getInputStream());
+	} catch (IOException e) {
+	    e.printStackTrace();
+	    return;
+	}
+
 	ImageReceiver r = new ImageReceiver(image, msg, imageTied, new Callback() {
 		public void completed() {
 		    sendln("IMAGE:RECEIVED");
@@ -123,8 +131,6 @@ public class DataReceiver implements Runnable {
 
 		data = new BufferedReader(new InputStreamReader(dataConnection.getInputStream()));
 		output = new BufferedWriter(new OutputStreamWriter(dataConnection.getOutputStream())); 
-
-		image = new ObjectInputStream(imgConnection.getInputStream());
 
 		Debug.log("Connected");
 		
