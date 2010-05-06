@@ -14,6 +14,10 @@ public class TiltComponent extends JComponent {
 	tilt = null;
     }
 
+    public String getName() {
+	return "Orientation";
+    }
+
     /* Argument is in degrees */
     public void setTilt(Orientation _tilt) {
 	tilt = _tilt;

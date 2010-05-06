@@ -24,6 +24,10 @@ public class ImageComponent extends JComponent {
 	captureTime = System.currentTimeMillis();
     }
 
+    public String getName() {
+	return "Telemetry";
+    }
+
     public void setCaptureTime(long time) {
 	captureTime = time;
     }	

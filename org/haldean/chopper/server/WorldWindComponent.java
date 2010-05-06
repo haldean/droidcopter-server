@@ -24,24 +24,26 @@ import gov.nasa.worldwind.layers.placename.*;
 import gov.nasa.worldwind.layers.Earth.*;
 
 public class WorldWindComponent extends JPanel {
-    /* The WorldWind component */
-    private WorldWindowGLCanvas wwd;
+    /* The WorldWind component. I want to make sweet, sweet love to NASA */
+    private final WorldWindowGLCanvas wwd;
     
     /* The locations and the line connecting them */
     private java.util.List<Position> locs;
     private Polyline pathLine;
     private SurfaceCircle chopperTargetInner;
     private SurfaceCircle chopperTargetOuter;
+    private final SurfaceCircle clickLocation;
 
     /* Used to have the component follow the last position
      * of the chopper */
     private JPanel statusPane;
+    private JPanel followPane;
     private JCheckBox follow;
     private double followAltitude = 1000;
     private final JTextField altField;
 
     /* Displays status messages */
-    private JLabel status;
+    private JButton statusLabel;
 
     /** Create the component */
     public WorldWindComponent() {
@@ -53,10 +55,19 @@ public class WorldWindComponent extends JPanel {
 	Model m = (Model) WorldWind.createConfigurationComponent(AVKey.MODEL_CLASS_NAME);
 	wwd.setModel(m);
 
-	/* Setup a select listener for the worldmap click-and-go feature */
-	wwd.addSelectListener(new ClickAndGoSelectListener(wwd, WorldMapLayer.class));
+	wwd.addMouseListener(new MouseAdapter() {
+		public void mouseClicked(MouseEvent e) {
+		    if (e.getButton() == MouseEvent.BUTTON3) {
+			Position clickPosition = wwd.getView().computePositionFromScreenPoint(e.getX(), e.getY());
+			clickLocation.setCenter(clickPosition);
+			statusLabel.setText("Send to (" + 
+					    Math.round(1000 * clickPosition.getLatitude().getDegrees()) / 1000.0 + "\u00B0, " +
+					    Math.round(1000 * clickPosition.getLongitude().getDegrees()) / 1000.0 + "\u00B0)");
+		    }
+		}
+	    });
 
-	/* Add wwd to the WW Component */
+	/* Add wwd to the panel */
 	add(wwd, BorderLayout.CENTER);
 
 	locs = new LinkedList<Position>();
@@ -74,18 +85,24 @@ public class WorldWindComponent extends JPanel {
 	chopperTargetOuter = new SurfaceCircle(attributes);
 	chopperTargetOuter.setRadius(500);
 
+	attributes.setOutlineMaterial(new Material(Color.GREEN));
+	clickLocation = new SurfaceCircle(attributes);
+	clickLocation.setRadius(100);
+
 	pathLine.setColor(new Color(255, 0, 0, 200));
 	pathLine.setLineWidth(2);
 	/* The line is ugly without this */
 	pathLine.setAntiAliasHint(Polyline.ANTIALIAS_NICEST);
 
-	/* Create a layer for the polyline and add it to the layer list */
+	/* Create a layer for the polyline and add it to the layer list.
+	 * Please just take me, NASA. */
 	RenderableLayer polyLayer = new RenderableLayer();
 	polyLayer.addRenderable(pathLine);
 
 	SurfaceShapeLayer shapeLayer = new SurfaceShapeLayer();
 	shapeLayer.addRenderable(chopperTargetInner);
 	shapeLayer.addRenderable(chopperTargetOuter);
+	shapeLayer.addRenderable(clickLocation);
 
 	LayerList layers = m.getLayers();
 	/* Add high-quality city satellite imagery. Thanks Microsoft! */
@@ -96,7 +113,7 @@ public class WorldWindComponent extends JPanel {
 	layers.add(polyLayer);
 	layers.add(shapeLayer);
 
-	statusPane = new JPanel(new FlowLayout());
+	followPane = new JPanel(new FlowLayout());
 	follow = new JCheckBox("Follow Altitude: ");
 	altField = new JTextField(new Double(followAltitude).toString());
 	altField.addActionListener(new ActionListener() {
@@ -108,10 +125,20 @@ public class WorldWindComponent extends JPanel {
 		    }
 		}
 	    });
-	statusPane.add(follow);
-	statusPane.add(altField);
+	
+	followPane.add(follow);
+	followPane.add(altField);
+
+	statusLabel = new JButton("Right click to select location");
+	statusPane = new JPanel(new BorderLayout());
+	statusPane.add(followPane, BorderLayout.WEST);
+	statusPane.add(statusLabel, BorderLayout.EAST);
 
 	add(statusPane, BorderLayout.SOUTH);
+    }
+
+    public String getName() {
+	return "Globe";
     }
 
     /** Add a waypoint, and optionally follow if the box is checked 
@@ -137,10 +164,15 @@ public class WorldWindComponent extends JPanel {
 	    follow.updateUI();
 	if (altField != null)
 	    altField.updateUI();
+	if (statusLabel != null)
+	    statusLabel.updateUI();
+	if (followPane != null)
+	    followPane.updateUI();
     }
 
     /** Test code. Take off from Nussbaum and fly West */
     public static void main(String args[]) {
+	System.err.println("Running");
 	JFrame f = new JFrame("World Wind Test");
 	WorldWindComponent w = new WorldWindComponent();
 	f.add(w);
@@ -204,7 +236,7 @@ class ClickAndGoSelectListener implements SelectListener {
     public void selected(SelectEvent event) {
         if (event.getEventAction().equals(SelectEvent.LEFT_CLICK)) {
             // This is a left click
-            if (event.hasObjects() && event.getTopPickedObject().hasPosition()) {
+            if (event.getTopPickedObject().hasPosition()) {
                 // There is a picked object with a position
                 if (event.getTopObject().getClass().equals(pickedObjClass)) {
                     // This object class we handle and we have an orbit view

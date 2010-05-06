@@ -15,6 +15,7 @@ public class GraphComponent extends JComponent {
     private double margin = 1;
 
     private int sampleCount = 100;
+    private final int maxSamples = 600;
     private int firstIndex = 0;
 
     private Color background = new Color(28, 25, 20);
@@ -69,6 +70,8 @@ public class GraphComponent extends JComponent {
 		max = p + margin;
 	    if (p < (min + margin))
 		min = p - margin;
+	    while (series.size() > maxSamples)
+		series.removeFirst();
 	}
 	repaint();
     }

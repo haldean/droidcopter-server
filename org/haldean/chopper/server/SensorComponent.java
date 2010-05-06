@@ -74,6 +74,10 @@ public class SensorComponent extends JPanel {
 	add(scalePanel, BorderLayout.SOUTH);
     }
 
+    public String getName() {
+	return "Sensors";
+    }
+
     public void setScale(int s) {
 	light.setSampleCount(s);
 	prox.setSampleCount(s);

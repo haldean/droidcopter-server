@@ -7,9 +7,12 @@ public class UpdatableTextArea extends JPanel implements Updatable {
     private JTextArea area;
     private JScrollPane scroll;
     private JCheckBox scrollLock;
+    private String name;
 
-    public UpdatableTextArea() {
+    public UpdatableTextArea(String _name) {
 	super(new BorderLayout());
+
+	name = _name;
 
 	area = new JTextArea();
 	area.setEditable(false);
@@ -19,6 +22,10 @@ public class UpdatableTextArea extends JPanel implements Updatable {
 
 	add(scroll, BorderLayout.CENTER);
 	add(scrollLock, BorderLayout.SOUTH);
+    }
+
+    public String getName() {
+	return name;
     }
 
     public void update(String msg) {

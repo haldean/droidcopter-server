@@ -79,6 +79,10 @@ public class AccelerationComponent extends JPanel {
 	add(scalePanel, BorderLayout.SOUTH);
     }
 
+    public String getName() {
+	return "Acceleration";
+    }
+
     public void setScale(int s) {
 	xAccel.setSampleCount(s);
 	yAccel.setSampleCount(s);

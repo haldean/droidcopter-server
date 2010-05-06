@@ -1,21 +1,25 @@
 package org.haldean.chopper.server;
 
+import java.util.LinkedList;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
 public class ServerHost extends JFrame {
-    public final String heloName = new String("Chopper");
+    public final String heloName = new String("Horizon");
     public final DataReceiver r;
     public final WorldWindComponent lc;
     public final TiltComponent tc;
     public final ImageComponent ic;
     public final AccelerationComponent ac;
-    public final UpdatableTextArea status;
+    public final Updatable status;
     public final UpdatableTextArea debug;
     public final SensorComponent sc;
     private final String hostPort[];
+
+    private LinkedList<Component> leftTabPanes;
+    private LinkedList<Component> rightTabPanes;
 
     public ServerHost(String s) {
 	super();
@@ -28,8 +32,8 @@ public class ServerHost extends JFrame {
 	ic = new ImageComponent();
 	ac = new AccelerationComponent();
 	sc = new SensorComponent();
-	status = new UpdatableTextArea();
-	debug = new UpdatableTextArea();
+	status = new EchoUpdatable();
+	debug = new UpdatableTextArea("Debug");
 
 	Debug.setDebugOut(debug);
 
@@ -53,6 +57,16 @@ public class ServerHost extends JFrame {
 	r.tieImage(ic);
 
 	//r.tie(new EchoUpdatable());
+
+	leftTabPanes = new LinkedList<Component>();
+	rightTabPanes = new LinkedList<Component>();
+
+	leftTabPanes.add(lc);
+	rightTabPanes.add(ic);
+	leftTabPanes.add(tc);
+	rightTabPanes.add(ac);
+	rightTabPanes.add(sc);
+	leftTabPanes.add(debug);
     }
 
     public void accept() {
@@ -70,10 +84,14 @@ public class ServerHost extends JFrame {
 	    return new Font("Helvetica", Font.PLAIN, size);
     }
 
+    public void osInit() {
+	if (System.getProperty("os.name").startsWith("Mac"))
+            System.setProperty("apple.laf.useScreenMenuBar", "true");
+    }
+
     public void start() {
 	/* Update the Look and Feel of components created
 	 * in the constructor */
-	status.updateUI();
 	debug.updateUI();
 	ac.updateUI();
 	sc.updateUI();
@@ -81,9 +99,19 @@ public class ServerHost extends JFrame {
 
 	/* The right/left pane creator */
 	JPanel horizontalPanel = new JPanel(new GridLayout(1,2));
+
+	/* The two tab panes */
 	JTabbedPane leftTabs = new JTabbedPane();
-	leftTabs.add("GPS", lc);
-	leftTabs.add("Telemetry", ic);
+	JTabbedPane rightTabs = new JTabbedPane();
+
+	for (int i=0; i<leftTabPanes.size(); i++) {
+	    leftTabs.add(leftTabPanes.get(i));
+	}
+
+	for (int i=0; i<rightTabPanes.size(); i++) {
+	    rightTabs.add(rightTabPanes.get(i));
+	}
+
 	horizontalPanel.add(leftTabs);
 	add(horizontalPanel);
 
@@ -91,7 +119,7 @@ public class ServerHost extends JFrame {
 	JPanel rawDataPanel = new JPanel(new BorderLayout());
 
 	/* The title label*/
-	JLabel titleLabel = new JLabel(heloName.toUpperCase() + " CONTROL");
+	JLabel titleLabel = new JLabel(heloName.toUpperCase() + " SERVER");
 	titleLabel.setFont(getFont(24, true));
 	titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -131,22 +159,14 @@ public class ServerHost extends JFrame {
 		}
 	    });
 
-	/* Assemble tab pane for right panel */
-	JTabbedPane rightTabPane = new JTabbedPane(JTabbedPane.TOP);
-	rightTabPane.add("Orientation", tc);
-	rightTabPane.add("Acceleration", ac);
-	rightTabPane.add("Sensors", sc);
-	rightTabPane.add("Raw Input", status);
-	rightTabPane.add("Debug Info", debug);
-
 	/* Assemble right panel */
 	rawDataPanel.add(titleLabel, BorderLayout.NORTH);
-	rawDataPanel.add(rightTabPane, BorderLayout.CENTER);
+	rawDataPanel.add(rightTabs, BorderLayout.CENTER);
 	rawDataPanel.add(statusPanel, BorderLayout.SOUTH);
 	horizontalPanel.add(rawDataPanel);
 
 	/* Show the frame */
-	setPreferredSize(new Dimension(1280, 700));
+	setPreferredSize(new Dimension(1100, 700));
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	pack();
 	setVisible(true);
@@ -165,6 +185,8 @@ public class ServerHost extends JFrame {
 	}
 
 	final ServerHost s = new ServerHost(serverURI);
+	s.osInit();
+
       	/* Set Look and Feel */
 	SwingUtilities.invokeAndWait(new Runnable() {
 		public void run() {
