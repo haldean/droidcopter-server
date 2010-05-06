@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-/* WorldWind imports. I love NASA. */
+/* World Wind imports. */
 import gov.nasa.worldwind.*;
 import gov.nasa.worldwind.avlist.*;
 import gov.nasa.worldwind.awt.*;
@@ -18,13 +18,13 @@ import gov.nasa.worldwind.geom.*;
 import gov.nasa.worldwind.render.*;
 import gov.nasa.worldwind.util.*;
 
-/* Layer imports. I fucking love NASA */
+/* Layer imports. */
 import gov.nasa.worldwind.layers.*;
 import gov.nasa.worldwind.layers.placename.*;
 import gov.nasa.worldwind.layers.Earth.*;
 
 public class WorldWindComponent extends JPanel {
-    /* The WorldWind component. I want to make sweet, sweet love to NASA */
+    /* The WorldWind component. */
     private final WorldWindowGLCanvas wwd;
     
     /* The locations and the line connecting them */
@@ -55,11 +55,16 @@ public class WorldWindComponent extends JPanel {
 	Model m = (Model) WorldWind.createConfigurationComponent(AVKey.MODEL_CLASS_NAME);
 	wwd.setModel(m);
 
+	/* Add a listener to implement the right-click functionality */
 	wwd.addMouseListener(new MouseAdapter() {
 		public void mouseClicked(MouseEvent e) {
+		    /* Button 3 is the right click button */
 		    if (e.getButton() == MouseEvent.BUTTON3) {
+			/* clickPosition now holds the position under the mouse cursor */
 			Position clickPosition = wwd.getView().computePositionFromScreenPoint(e.getX(), e.getY());
+			/* Move the green circle */
 			clickLocation.setCenter(clickPosition);
+			/* Update the button */
 			statusLabel.setText("Send to (" + 
 					    Math.round(1000 * clickPosition.getLatitude().getDegrees()) / 1000.0 + "\u00B0, " +
 					    Math.round(1000 * clickPosition.getLongitude().getDegrees()) / 1000.0 + "\u00B0)");
@@ -70,9 +75,12 @@ public class WorldWindComponent extends JPanel {
 	/* Add wwd to the panel */
 	add(wwd, BorderLayout.CENTER);
 
+	/* This list will hold the points in our path */
 	locs = new LinkedList<Position>();
+	/* And this is the line created by connecting those points */
 	pathLine = new Polyline(locs);
 
+	/* These are the attributes for the displayed SurfaceCircles */
 	ShapeAttributes attributes = new BasicShapeAttributes();
 	attributes.setDrawInterior(false);
 	attributes.setDrawOutline(true);
@@ -89,13 +97,13 @@ public class WorldWindComponent extends JPanel {
 	clickLocation = new SurfaceCircle(attributes);
 	clickLocation.setRadius(100);
 
+	/* Set the path color to a slightly-transparent red */
 	pathLine.setColor(new Color(255, 0, 0, 200));
 	pathLine.setLineWidth(2);
 	/* The line is ugly without this */
 	pathLine.setAntiAliasHint(Polyline.ANTIALIAS_NICEST);
 
-	/* Create a layer for the polyline and add it to the layer list.
-	 * Please just take me, NASA. */
+	/* Create a layer for the polyline and add it to the layer list. */
 	RenderableLayer polyLayer = new RenderableLayer();
 	polyLayer.addRenderable(pathLine);
 
@@ -104,18 +112,24 @@ public class WorldWindComponent extends JPanel {
 	shapeLayer.addRenderable(chopperTargetOuter);
 	shapeLayer.addRenderable(clickLocation);
 
+	/* Note that the layers must be added in this order for everything to 
+	 * show up correctly; the first added are at the "bottom" in terms of 
+	 * display ordering */
 	LayerList layers = m.getLayers();
-	/* Add high-quality city satellite imagery. Thanks Microsoft! */
-	layers.add(new MSVirtualEarthLayer(MSVirtualEarthLayer.LAYER_HYBRID));
 	/* Add high-quality topography data for the US. I fucking love NASA / USGS */
 	layers.add(new USGSTopoHighRes());
+	/* Add high-quality city satellite imagery. Thanks Microsoft! */
+	layers.add(new MSVirtualEarthLayer(MSVirtualEarthLayer.LAYER_HYBRID));
 	/* Add chopper location and path layers */
 	layers.add(polyLayer);
 	layers.add(shapeLayer);
 
+	/* Follow pane holds the check box and the textarea */
 	followPane = new JPanel(new FlowLayout());
 	follow = new JCheckBox("Follow Altitude: ");
 	altField = new JTextField(new Double(followAltitude).toString());
+	/* When the text is changed, automatically update the
+	 * follow altitude */
 	altField.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent event) {
 		    try {
@@ -129,7 +143,10 @@ public class WorldWindComponent extends JPanel {
 	followPane.add(follow);
 	followPane.add(altField);
 
+	/* Status button is in the bottom right */
 	statusLabel = new JButton("Right click to select location");
+
+	/* Status pane holds everything that is not the globe */
 	statusPane = new JPanel(new BorderLayout());
 	statusPane.add(followPane, BorderLayout.WEST);
 	statusPane.add(statusLabel, BorderLayout.EAST);
@@ -137,6 +154,7 @@ public class WorldWindComponent extends JPanel {
 	add(statusPane, BorderLayout.SOUTH);
     }
 
+    /* For tab panes to show it correctly */
     public String getName() {
 	return "Globe";
     }
@@ -157,6 +175,7 @@ public class WorldWindComponent extends JPanel {
 	    wwd.getView().goTo(_w, _w.getElevation() + followAltitude);
     }
 
+    /** Update the look and feel of this component */
     public void updateUI() {
 	if (statusPane != null)
 	    statusPane.updateUI();
@@ -190,68 +209,5 @@ public class WorldWindComponent extends JPanel {
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
-    }
-}
-
-class ClickAndGoSelectListener implements SelectListener {
-    private final WorldWindow wwd;
-    private final Class pickedObjClass;    // Which picked object class do we handle
-    private final double elevationOffset;  // Meters above the target position
-
-    public ClickAndGoSelectListener(WorldWindow wwd, Class pickedObjClass) {
-        if (wwd == null) {
-            String msg = Logging.getMessage("nullValue.WorldWindow");
-            Logging.logger().severe(msg);
-            throw new IllegalArgumentException(msg);
-        }
-
-        this.wwd = wwd;
-        this.pickedObjClass = pickedObjClass;
-        this.elevationOffset = 0d;
-    }
-
-    public ClickAndGoSelectListener(WorldWindow wwd, Class pickedObjClass, double elevationOffset) {
-        if (wwd == null) {
-            String msg = Logging.getMessage("nullValue.WorldWindow");
-            Logging.logger().severe(msg);
-            throw new IllegalArgumentException(msg);
-        }
-
-        if (pickedObjClass == null) {
-            String msg = Logging.getMessage("nullValue.ClassIsNull");
-            Logging.logger().severe(msg);
-            throw new IllegalArgumentException(msg);
-        }
-
-        this.wwd = wwd;
-        this.pickedObjClass = pickedObjClass;
-        this.elevationOffset = elevationOffset;
-    }
-
-    /**
-     * Select Listener implementation.
-     *
-     * @param event the SelectEvent
-     */
-    public void selected(SelectEvent event) {
-        if (event.getEventAction().equals(SelectEvent.LEFT_CLICK)) {
-            // This is a left click
-            if (event.getTopPickedObject().hasPosition()) {
-                // There is a picked object with a position
-                if (event.getTopObject().getClass().equals(pickedObjClass)) {
-                    // This object class we handle and we have an orbit view
-                    Position targetPos = event.getTopPickedObject().getPosition();
-                    View view = this.wwd.getView();
-
-		    // Use a PanToIterator to iterate view to target position
-                    if(view != null) {
-			// The elevation component of 'targetPos' here is not the surface elevation,
-			// so we ignore it when specifying the view center position.
-                        view.goTo(new Position(targetPos, 0),
-				  targetPos.getElevation() + this.elevationOffset);
-                    }
-                }
-            }
-        }
     }
 }
