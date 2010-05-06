@@ -1,2 +1,4 @@
 *.class
 *.apk
+*.#*
+*.DS_Store
