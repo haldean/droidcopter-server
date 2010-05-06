@@ -7,6 +7,7 @@ import java.awt.geom.*;
 import javax.swing.*;
 import javax.imageio.*;
 
+/** A component to display images */
 public class ImageComponent extends JComponent {
     private final Color background = new Color(28, 25, 20);
     private final Color labelColor = Color.WHITE;
@@ -18,22 +19,30 @@ public class ImageComponent extends JComponent {
 
     private long captureTime;
 
+    /** Create an empty ImageComponent */
     public ImageComponent() {
 	transform = AffineTransform.getScaleInstance(1, 1);
 	img = null;
 	captureTime = System.currentTimeMillis();
     }
 
+    /** For TabPanes */
     public String getName() {
 	return "Telemetry";
     }
 
+    /** Set the capture time of the last received image. 
+     *  TODO: Make this work 
+     *  @param time Number of milliseconds since the start of an era */
     public void setCaptureTime(long time) {
 	captureTime = time;
     }	
 
+    /** Set the image displayed by the component 
+     *  @param _imgData A JPEG-encoded image in a byte array */
     public void setImage(byte[] _imgData) {
 	try {
+	    /* Make sure it isn't the same image we already have. */
 	    if (_imgData != null && imgData != _imgData) {
 		img = ImageIO.read(new ByteArrayInputStream(_imgData));
 		imgData = _imgData;
@@ -46,6 +55,7 @@ public class ImageComponent extends JComponent {
 	}
     }
 
+    /** Paint the image and metadata onto the canvas */
     public void paintComponent(Graphics g) {
 	Graphics2D g2 = (Graphics2D) g;
 
@@ -54,16 +64,23 @@ public class ImageComponent extends JComponent {
 	g2.setColor(background);
 	g2.fillRect(0, 0, width, height);
 
+	g2.setColor(labelColor);
+	g2.setFont(labelFont);
+
 	if (img != null) {
+	    /* Calculate the appropriate transform to fit the image to
+	     * the canvas.  We fit the width, because it is larger
+	     * than the height and the canvas is about square. */
 	    float scale = (float) width / (float) img.getWidth();
+	    /* Create a new square affine transform for that scaling */
 	    transform = AffineTransform.getScaleInstance(scale, scale);
 	    g2.drawImage(img, transform, null);
 	
+	    /* Draw the image resolution to the component */
 	    g2.drawString("Size: " + (int) img.getWidth() + "x" + (int) img.getHeight(), 1, height - 10);
 	}
 	
-	g2.setColor(labelColor);
-	g2.setFont(labelFont);
+	/* Draw the capture time to the component */
 	g2.drawString("Captured " + ((System.currentTimeMillis() - captureTime) / 1000.0) + " sec ago", 1, 11);
     }
 }

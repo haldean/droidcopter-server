@@ -9,7 +9,6 @@ public class SensorParser implements Updatable {
     /* The messages are all essentially flattened arrays
      * divided by colons. These constants are used to determine
      * which "index" in the string corresponds to what data */
-
     private final int TILT = 2;
     private final int PITCH = 3;
     private final int ROLL = 1;
@@ -27,7 +26,6 @@ public class SensorParser implements Updatable {
 
     /* These are the components that are updated
      * when new data comes in */
-    private LocationComponent gps;
     private WorldWindComponent wwc;
     private TiltComponent orient;
     private AccelerationComponent accel;
@@ -35,12 +33,6 @@ public class SensorParser implements Updatable {
 
     public SensorParser() {
 	;
-    }
-
-    /** Set the notified location component
-     *  @param _gps The location component to notify */
-    public void setLocationComponent(LocationComponent _gps) {
-	gps = _gps;
     }
 
     /** Set the notified NASA World Wind globe component 
@@ -98,18 +90,9 @@ public class SensorParser implements Updatable {
 				  new Double(parts[ZACCEL]));
 	}
 
-	/* Sensors */
+	/* Sensors. All other sensors unsupported by phone and .:. ignored. */
 	else if (parts[0].equals("FLUX"))
 	    sensors.setFlux(new Double(parts[1]));
-
-	else if (parts[0].equals("LIGHT"))
-	    sensors.setLight(new Double(parts[1]));
-
-	else if (parts[0].equals("PROXIMITY"))
-	    sensors.setProximity(new Double(parts[1]));
-
-	else if (parts[0].equals("PRESSURE"))
-	    sensors.setPressure(new Double(parts[1]));
 
 	else if (parts[0].equals("TEMPERATURE"))
 	    sensors.setTemperature(new Double(parts[1]));

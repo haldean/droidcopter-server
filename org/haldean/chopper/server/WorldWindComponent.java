@@ -45,7 +45,7 @@ public class WorldWindComponent extends JPanel {
     /* Displays status messages */
     private JButton statusLabel;
 
-    /** Create the component */
+    /** Create a new WorldWindComponent */
     public WorldWindComponent() {
 	super(new BorderLayout());
 
@@ -154,7 +154,7 @@ public class WorldWindComponent extends JPanel {
 	add(statusPane, BorderLayout.SOUTH);
     }
 
-    /* For tab panes to show it correctly */
+    /** Used for TabPanes */
     public String getName() {
 	return "Globe";
     }

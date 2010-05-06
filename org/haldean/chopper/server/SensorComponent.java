@@ -4,54 +4,44 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+/** A component to display graphs of on-board sensors */
 public class SensorComponent extends JPanel {
-    private final GraphComponent light;
-    private final GraphComponent prox;
+    /* Graphs and labels to display magnetic flux and temperature */
     private final GraphComponent flux;
     private final GraphComponent temp;
-    private final GraphComponent press;
 
     private JPanel statsPanel;
-    private final JLabel lightLabel;
-    private final JLabel proxLabel;
     private final JLabel fluxLabel;
     private final JLabel tempLabel;
-    private final JLabel pressLabel;
 
+    /* Components for choosing graph scale */
     private JPanel scalePanel;
     private JSlider scaleChooser;
     private final JLabel scaleLabel;
 
+    /* The default X-axis scale */
     private final int defaultScale = 300;
 
     private final Color foreground = Color.white;
     private final Color background = new Color(28, 25, 20);
 
+    /** Create a new SensorComponent */
     public SensorComponent() {
 	super(new BorderLayout());
-	JPanel graphsPanel = new JPanel(new GridLayout(3,2));
+	JPanel graphsPanel = new JPanel(new GridLayout(3,1));
 
-	light = new GraphComponent("Light");
-	prox = new GraphComponent("Proximity");
 	flux = new GraphComponent("Flux");
-	temp = new GraphComponent("Temperature");
-	press = new GraphComponent("Pressure");
-
-	lightLabel = new JLabel();
-	proxLabel = new JLabel();
+	temp = new GraphComponent("Internal Temperature");
 	fluxLabel = new JLabel();
 	tempLabel = new JLabel();
-	pressLabel = new JLabel();
 
-	statsPanel = new JPanel(new GridLayout(5,1));
-	statsPanel.add(lightLabel);
-	statsPanel.add(proxLabel);
+	statsPanel = new JPanel(new GridLayout(2,1));
 	statsPanel.add(fluxLabel);
 	statsPanel.add(tempLabel);
-	statsPanel.add(pressLabel);
 
 	scaleChooser = new JSlider(25, 500, defaultScale);
 	scaleLabel = new JLabel(scaleChooser.getValue() + " samples");
+	/* Automatically update X scales when slider is changed */
 	scaleChooser.addChangeListener(new ChangeListener() {
 		public void stateChanged(ChangeEvent e) {
 		    setScale(scaleChooser.getValue());
@@ -63,39 +53,34 @@ public class SensorComponent extends JPanel {
 	scalePanel.add(scaleLabel, BorderLayout.EAST);
 	scalePanel.add(scaleChooser, BorderLayout.CENTER);
 
-	graphsPanel.add(light);
-	graphsPanel.add(prox);
 	graphsPanel.add(flux);
 	graphsPanel.add(temp);
-	graphsPanel.add(press);
 	graphsPanel.add(statsPanel);
 
 	add(graphsPanel, BorderLayout.CENTER);
 	add(scalePanel, BorderLayout.SOUTH);
     }
 
+    /** Used for TabPanes */
     public String getName() {
 	return "Sensors";
     }
 
+    /** Set the X-axis scales of the graphs
+     *  @param s The number of samples to show along the X-axis */
     public void setScale(int s) {
-	light.setSampleCount(s);
-	prox.setSampleCount(s);
 	flux.setSampleCount(s);
 	temp.setSampleCount(s);
-	press.setSampleCount(s);
 	scaleLabel.setText(s + " samples");
     }
 
+    /** Update the look and feel of the component */
     public void updateUI() {
 	super.updateUI();
 	if (statsPanel != null) {
 	    statsPanel.updateUI();
-	    lightLabel.updateUI();
-	    proxLabel.updateUI();
 	    fluxLabel.updateUI();
 	    tempLabel.updateUI();
-	    pressLabel.updateUI();
 	    scaleLabel.updateUI();
 
 	    scalePanel.updateUI();
@@ -104,33 +89,19 @@ public class SensorComponent extends JPanel {
 	}
     }
 
-    public void setLight(double _l) {
-	light.addPoint(_l);
-	lightLabel.setText("<html><b>Light</b>: " + _l + " lux</html>");
-	repaint();
-    }
-
-    public void setProximity(double _p) {
-	prox.addPoint(_p);
-	proxLabel.setText("<html><b>Proximity</b>: " + _p + " cm</html>");
-	repaint();
-    }
-
+    /** Add a new magnetic flux datapoint
+     *  @param _f The flux in microtesla */
     public void setFlux(double _f) {
 	flux.addPoint(_f);
 	fluxLabel.setText("<html><b>Flux</b>: " + _f + " \u00B5T</html>");
 	repaint();
     }
 
+    /** Add a new internal temperature datapoint
+     *  @param _t The internal temperature of the phone in degrees Celcius */
     public void setTemperature(double _t) {
 	temp.addPoint(_t);
-	tempLabel.setText("<html><b>Temperature</b>: " + _t + "\u00B0 C</html>");
-	repaint();
-    }
-
-    public void setPressure(double _p) {
-	press.addPoint(_p);
-	pressLabel.setText("<html><b>Pressure</b>: " + _p + " Pa</html>");
+	tempLabel.setText("<html><b>Internal Temperature</b>: " + _t + "\u00B0 C</html>");
 	repaint();
     }
 }
