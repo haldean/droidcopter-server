@@ -22,5 +22,8 @@ if [ 'pack' == "$1" ]; then
 else
     javac org/haldean/chopper/server/ServerHost.java && \
 	echo "Compiled" 1>&2 && \
-	java -Djava.library.path=jars/worldwind/ org.haldean.chopper.server.ServerHost "pices.dynalias.org:23" debug
+	java -Djava.library.path=jars/worldwind/ \
+	-Xdock:name="Horizon Server" \
+	-Xdock:icon=img/logo.png \
+	org.haldean.chopper.server.ServerHost "pices.dynalias.org:23" debug
 fi
