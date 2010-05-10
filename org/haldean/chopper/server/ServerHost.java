@@ -129,8 +129,8 @@ public class ServerHost extends JFrame {
 	Debug.log("Running on " + System.getProperty("os.name") + " " + 
 		  System.getProperty("os.arch"));
 	/* 64-bit Linux can't have pretty globes */
-	if (System.getProperty("os.name").equals("Linux") &&
-	    System.getProperty("os.arch").equals("amd64"))
+	if (System.getProperty("os.name").startsWith("Linux") &&
+	    System.getProperty("os.arch").startsWith("amd64"))
 	    allowGlobe = false;
 	if (System.getProperty("os.name").startsWith("Mac"))
             System.setProperty("apple.laf.useScreenMenuBar", "true");
