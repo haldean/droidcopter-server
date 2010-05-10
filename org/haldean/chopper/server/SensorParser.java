@@ -71,7 +71,7 @@ public class SensorParser implements Updatable {
 	    double alt = new Double(parts[ALT]);
 
 	    /* If this is true, the phone isn't receiving a GPS signal */
-	    if (! (lat == 0 || lon == 0 || alt == 0))
+	    if (! (lat == 0 || lon == 0 || alt == 0) && wwc != null)
 		wwc.addWaypoint(Position.fromDegrees(lat, lon, alt));
 	}
 

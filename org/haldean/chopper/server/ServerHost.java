@@ -49,7 +49,12 @@ public class ServerHost extends JFrame {
 	/* Create all the necessary components so we can feed them
 	 * into each other */
 	r = DataReceiver.getInstance();
-	lc = new WorldWindComponent();
+
+	if (allowGlobe)
+	    lc = new WorldWindComponent();
+	else
+	    lc = null;
+
 	tc = new TiltComponent();
 	ic = new ImageComponent();
 	ac = new AccelerationComponent();
@@ -89,7 +94,8 @@ public class ServerHost extends JFrame {
 	rightTabPanes = new LinkedList<Component>();
 
 	/* The left tab pane has the globe, the tilt and the debug feed */
-	leftTabPanes.add(lc);
+	if (allowGlobe)
+	    leftTabPanes.add(lc);
 	leftTabPanes.add(tc);
 	leftTabPanes.add(debug);
 
