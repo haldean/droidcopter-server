@@ -30,5 +30,5 @@ else
     javac org/haldean/chopper/server/ServerHost.java && \
 	echo "Compiled" 1>&2 && \
 	java -Djava.library.path=jars/worldwind/ $DOCK \
-	org.haldean.chopper.server.ServerHost "pices.dynalias.org:23" debug
+	org.haldean.chopper.server.ServerHost -h "pices.dynalias.org:23" -d
 fi

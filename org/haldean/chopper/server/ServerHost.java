@@ -31,6 +31,11 @@ public class ServerHost extends JFrame {
     private LinkedList<Component> leftTabPanes;
     private LinkedList<Component> rightTabPanes;
 
+    /* Whether we are allowed to create a WorldWindComponent.
+     * WWJ doesn't run on Linux 86-64, so Ben's high-fallutin' 
+     * 64-bit Ubuntu can't have a globe */
+    private boolean allowGlobe = true;
+
     /** Create a new ServerHost
      *  @param s The server address and port in the form hostname:port. If passed null,
      *           it will automatically show a JOptionPane to ask for one */
@@ -61,7 +66,6 @@ public class ServerHost extends JFrame {
 	    hostPortString = JOptionPane.showInputDialog("Hostname and port of server machine");
 	else
 	    hostPortString = s;
-	Debug.log("hostPortString is " + hostPortString);
 
 	/* Split it on the colon and initialize the DataReceiver. The image port is
 	 * assumed to be one greater than the data port */
@@ -116,6 +120,12 @@ public class ServerHost extends JFrame {
 
     /** Initialize operating system specific stuff */
     public void osInit() {
+	Debug.log("Running on " + System.getProperty("os.name") + " " + 
+		  System.getProperty("os.arch"));
+	/* 64-bit Linux can't have pretty globes */
+	if (System.getProperty("os.name").equals("Linux") &&
+	    System.getProperty("os.arch").equals("amd64"))
+	    allowGlobe = false;
 	if (System.getProperty("os.name").startsWith("Mac"))
             System.setProperty("apple.laf.useScreenMenuBar", "true");
     }
@@ -218,16 +228,13 @@ public class ServerHost extends JFrame {
     public static void main(String args[]) throws Exception {
 	/* Parse command line arguments */
 	String serverURI = null;
-	if (args.length > 0 && args[0].equals("debug"))
-	    Debug.enable = true;
-	else if (args.length == 1) {
-	    serverURI = args[0];
-	} else {
-	    if (args.length > 1 && args[1].equals("debug")) {
+	Debug.enable = false;
+
+	for (int i=0; i<args.length; i++) {
+	    if (args[i].startsWith("-d"))
 		Debug.enable = true;
-		serverURI = args[0];
-	    } else
-		Debug.enable = false;
+	    if (args[i].startsWith("-h"))
+		serverURI = args[++i];
 	}
 
 	/* Initialize the server host */

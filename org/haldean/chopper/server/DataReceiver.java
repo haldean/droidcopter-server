@@ -121,7 +121,9 @@ public class DataReceiver implements Runnable {
 		    sendln("IMAGE:RECEIVED");
 		}
 	    });
-	new Thread(r).start();
+	Thread imgThread = new Thread(r);
+	imgThread.setName("Image receiver");
+	imgThread.start();
     }
 
     /** @return True if connected to server, false if not */
@@ -159,6 +161,7 @@ public class DataReceiver implements Runnable {
 
     /** Run the DataReceiver thread */
     public void run() {
+	Thread.currentThread().setName("Data receiver");
 	Debug.log("DataReceiver thread " + Thread.currentThread().getName() + " started");
 	/* This loop automatically reestablishes the connections if they die
 	 * unless the stopThread flag is set true */
