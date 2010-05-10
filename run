@@ -1,6 +1,13 @@
 #!/bin/bash
 
 export CLASSPATH=`ls -1 jars/*.jar jars/worldwind/*.jar | xargs | sed "s/ /:/g"`:.
+OSNAME=`uname`
+
+if [ 'Linux' == "$OSNAME" ]; then
+    DOCK=
+else
+    DOCK="-Xdock:name='Horizon Server' -Xdock:icon=img/logo.png"
+fi
 
 clean() {
     echo "Clean old classfiles" 1>&2
@@ -22,8 +29,6 @@ if [ 'pack' == "$1" ]; then
 else
     javac org/haldean/chopper/server/ServerHost.java && \
 	echo "Compiled" 1>&2 && \
-	java -Djava.library.path=jars/worldwind/ \
-	-Xdock:name="Horizon Server" \
-	-Xdock:icon=img/logo.png \
+	java -Djava.library.path=jars/worldwind/ $DOCK \
 	org.haldean.chopper.server.ServerHost "pices.dynalias.org:23" debug
 fi
