@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export CLASSPATH=`ls -1 jars/*.jar jars/worldwind/*.jar | xargs | sed "s/ /:/g"`:.
+export CLASSPATH=$CLASSPATH:`ls -1 jars/*.jar jars/worldwind/*.jar | xargs | sed "s/ /:/g"`:.
 OSNAME=`uname`
 
 if [ 'Linux' == "$OSNAME" ]; then
@@ -29,6 +29,6 @@ if [ 'pack' == "$1" ]; then
 else
     javac org/haldean/chopper/server/ServerHost.java -Xlint:deprecation && \
 	echo "Compiled" 1>&2 && \
-	java -Djava.library.path=jars/worldwind/:jars/ $DOCK \
+	java -Djava.library.path=jars/worldwind/:jars/:/lib/ $DOCK \
 	org.haldean.chopper.server.ServerHost -h "pices.dynalias.org:23" -d
 fi
