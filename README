@@ -27,4 +27,5 @@ Required libraries:
       This can be done using the following command:
         $ echo CLASSPATH\=\$CLASSPATH:/usr/share/java/j3dcore.jar:/usr/share/java/j3dutils.jar:/usr/share/java/vecmath.jar >> ~/.zshrc
       Make sure to replace ~/.zshrc with the profile for whatever shell 
-      you use.
+      you use. You will need to restart your terminal after running 
+      this command.

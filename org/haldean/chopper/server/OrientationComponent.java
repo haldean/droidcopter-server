@@ -70,19 +70,69 @@ public class OrientationComponent extends JPanel {
 	red.setColoringAttributes(new ColoringAttributes(1.0f, 0f, 0f,
 						       ColoringAttributes.FASTEST));
 
-	/* The horizontal plane. Name ambiguity between Swing and Java3D. */
-	com.sun.j3d.utils.geometry.Box plane = 
-	    new com.sun.j3d.utils.geometry.Box(0.5f, 0.01f, 0.5f, metal);
+	Appearance green = new Appearance();
+	green.setColoringAttributes(new ColoringAttributes(0f, 1.0f, 0f,
+						       ColoringAttributes.FASTEST));
+
+	Appearance blue = new Appearance();
+	blue.setColoringAttributes(new ColoringAttributes(1.0f, 1.0f, 0f,
+						       ColoringAttributes.FASTEST));
+
+	/* The X bars */
+	Cylinder xbar1 = new Cylinder(0.01f, 1f, metal);
+	Cylinder xbar2 = new Cylinder(0.01f, 1f, metal);
+
+	/* Move bar 1 to be perpendicular */
+	Transform3D rotateZ = new Transform3D();
+	rotateZ.rotZ(Math.PI / 2d);
+	TransformGroup grpZ = new TransformGroup(rotateZ);
+	grpZ.addChild(xbar1);
+
+	/* Rotate them both to be in the XY plane */
+	Transform3D rotateToXY = new Transform3D();
+	rotateToXY.rotX(Math.PI / 2d);
+	TransformGroup grpXY = new TransformGroup(rotateToXY);
+	grpXY.addChild(xbar2);
+	grpXY.addChild(grpZ);
 
 	/* The downwards-pointing vector */
 	Cylinder cyl = new Cylinder(0.005f, 0.25f, red);
-	
 	Transform3D translate = new Transform3D();
 	translate.set(new Vector3f(0f, -0.125f, 0f));
 	TransformGroup cylTransform = new TransformGroup(translate);
-	    
-	node.addChild(plane);
 	cylTransform.addChild(cyl);
+	    
+	/* The "propellers" */
+	Cylinder prop1 = new Cylinder(0.03f, 0.1f, blue);
+	Cylinder prop2 = new Cylinder(0.03f, 0.1f, red);
+	Cylinder prop3 = new Cylinder(0.03f, 0.1f, blue);
+	Cylinder prop4 = new Cylinder(0.03f, 0.1f, red);
+
+	Transform3D prop1Trans = new Transform3D();
+	prop1Trans.set(new Vector3f(0.5f, 0, 0));
+	TransformGroup prop1g = new TransformGroup(prop1Trans);
+	prop1g.addChild(prop1);
+	node.addChild(prop1g);
+
+	Transform3D prop2Trans = new Transform3D();
+	prop2Trans.set(new Vector3f(0, 0, 0.5f));
+	TransformGroup prop2g = new TransformGroup(prop2Trans);
+	prop2g.addChild(prop2);
+	node.addChild(prop2g);
+
+	Transform3D prop3Trans = new Transform3D();
+	prop3Trans.set(new Vector3f(-0.5f, 0, 0));
+	TransformGroup prop3g = new TransformGroup(prop3Trans);
+	prop3g.addChild(prop3);
+	node.addChild(prop3g);
+
+	Transform3D prop4Trans = new Transform3D();
+	prop4Trans.set(new Vector3f(0, 0, -0.5f));
+	TransformGroup prop4g = new TransformGroup(prop4Trans);
+	prop4g.addChild(prop4);
+	node.addChild(prop4g);
+
+	node.addChild(grpXY);
 	node.addChild(cylTransform);
 
 	chopperRotator = new TransformGroup();
@@ -133,9 +183,6 @@ public class OrientationComponent extends JPanel {
 	frame.pack();
 	frame.setVisible(true);
 
-	try{
-	    Thread.sleep(1000);
-	} catch (Exception e) { ; }
 	o.setOrientation(new Orientation(0, 45, 45));
     }
 }
