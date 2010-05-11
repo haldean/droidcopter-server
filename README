@@ -15,3 +15,16 @@ Required libraries:
   libj3dcore-ogl to be present in /lib. If your libj3dcore is in a
   different directory, you can change this in the run script by adding
   your directory to the java.library.path in the run-phase.
+
+  To install Java3D for Ubuntu:
+    - Install libjava3d-java using your favorite package manager
+    - Create the symbolic links for the library:
+        # ln -s /usr/lib/jni/libj3dcore-ogl.so /lib/
+    - Add the following three jarfiles to your classpath:
+        - /usr/share/java/j3dcore.jar
+	- /usr/share/java/j3dutils.jar
+	- /usr/share/java/vecmath.jar
+      This can be done using the following command:
+        $ echo CLASSPATH\=\$CLASSPATH:/usr/share/java/j3dcore.jar:/usr/share/java/j3dutils.jar:/usr/share/java/vecmath.jar >> ~/.zshrc
+      Make sure to replace ~/.zshrc with the profile for whatever shell 
+      you use.
