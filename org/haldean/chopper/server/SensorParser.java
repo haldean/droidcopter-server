@@ -30,6 +30,7 @@ public class SensorParser implements Updatable {
     private TiltComponent orient;
     private AccelerationComponent accel;
     private SensorComponent sensors;
+    private StatusLabel status;
 
     public SensorParser() {
 	;
@@ -57,6 +58,12 @@ public class SensorParser implements Updatable {
      *  @param _sensors The sensor component to notify */
     public void setSensorComponent(SensorComponent _sensors) {
 	sensors = _sensors;
+    }
+
+    /** Set the notified status label
+     *  @param _status The status label to notify on battery updates */
+    public void setStatusLabel(StatusLabel _status) {
+	status = _status;
     }
 
     /** Update the components with new data 
@@ -96,5 +103,8 @@ public class SensorParser implements Updatable {
 
 	else if (parts[0].equals("TEMPERATURE"))
 	    sensors.setTemperature(new Double(parts[1]));
+
+	else if (parts[0].equals("BATTERY"))
+	    status.setBattery(new Double(parts[1]));
     }
 }

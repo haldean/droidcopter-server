@@ -21,6 +21,10 @@ public class ServerHost extends JFrame {
     public final Updatable status;
     public final UpdatableTextArea debug;
     public final SensorComponent sc;
+    public final StatusLabel sl;
+
+    /* Custom controllers, mostly because Will is the effing man */
+    private final PadController pad;
 
     /* The string of the form hostname:port representing
      * the server to connect to for data. */
@@ -30,6 +34,8 @@ public class ServerHost extends JFrame {
      * panes in the UI */
     private LinkedList<Component> leftTabPanes;
     private LinkedList<Component> rightTabPanes;
+    public JTabbedPane leftTabs;
+    public JTabbedPane rightTabs;
 
     /* Whether we are allowed to create a WorldWindComponent.
      * WWJ doesn't run on Linux 86-64, so Ben's high-fallutin' 
@@ -62,6 +68,9 @@ public class ServerHost extends JFrame {
 	status = new EchoUpdatable();
 	debug = new UpdatableTextArea("Debug");
 
+	sl = new StatusLabel();
+	r.setStatusLabel(sl);
+
 	/* Sets the output for all the glorious error messages */
 	Debug.setDebugOut(debug);
 
@@ -84,6 +93,7 @@ public class ServerHost extends JFrame {
 	sp.setTiltComponent(tc);
 	sp.setAccelerationComponent(ac);
 	sp.setSensorComponent(sc);
+	sp.setStatusLabel(sl);
 
 	/* Tie the updatables to the DataReceiver */
 	r.tie(sp);
@@ -103,6 +113,8 @@ public class ServerHost extends JFrame {
 	rightTabPanes.add(ic);
 	rightTabPanes.add(ac);
 	rightTabPanes.add(sc);
+
+	pad = new PadController(this, sl);
     }
 
     /** Start accepting data */
@@ -149,8 +161,8 @@ public class ServerHost extends JFrame {
 	JPanel horizontalPanel = new JPanel(new GridLayout(1,2));
 
 	/* The two tab panes */
-	JTabbedPane leftTabs = new JTabbedPane();
-	JTabbedPane rightTabs = new JTabbedPane();
+	leftTabs = new JTabbedPane();
+	rightTabs = new JTabbedPane();
 
 	/* Add all of the stuff on the left to the tabbed pane */
 	for (int i=0; i<leftTabPanes.size(); i++) {
@@ -220,7 +232,7 @@ public class ServerHost extends JFrame {
 	/* Assemble right panel */
 	rawDataPanel.add(titleLabel, BorderLayout.NORTH);
 	rawDataPanel.add(rightTabs, BorderLayout.CENTER);
-	rawDataPanel.add(statusPanel, BorderLayout.SOUTH);
+	rawDataPanel.add(sl, BorderLayout.SOUTH);
 	horizontalPanel.add(rawDataPanel);
 
 	/* Show the frame */
@@ -228,6 +240,8 @@ public class ServerHost extends JFrame {
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	pack();
 	setVisible(true);
+
+	new Thread(pad).start();
     }
 
     /** Run the chopper host */

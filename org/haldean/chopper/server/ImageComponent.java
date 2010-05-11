@@ -17,13 +17,13 @@ public class ImageComponent extends JComponent {
     private BufferedImage img;
     private AffineTransform transform;
 
-    private long captureTime;
+    private long lastCaptureTime;
+    private double framerate;
 
     /** Create an empty ImageComponent */
     public ImageComponent() {
 	transform = AffineTransform.getScaleInstance(1, 1);
 	img = null;
-	captureTime = System.currentTimeMillis();
     }
 
     /** For TabPanes */
@@ -35,7 +35,6 @@ public class ImageComponent extends JComponent {
      *  TODO: Make this work 
      *  @param time Number of milliseconds since the start of an era */
     public void setCaptureTime(long time) {
-	captureTime = time;
     }	
 
     /** Set the image displayed by the component 
@@ -46,6 +45,9 @@ public class ImageComponent extends JComponent {
 	    if (_imgData != null && imgData != _imgData) {
 		img = ImageIO.read(new ByteArrayInputStream(_imgData));
 		imgData = _imgData;
+
+		framerate = 1.0 / ((System.currentTimeMillis() - lastCaptureTime) / 1000.0);
+		lastCaptureTime = System.currentTimeMillis();
 	    }
 	} catch (Exception e) {
 	    img = null;
@@ -78,9 +80,9 @@ public class ImageComponent extends JComponent {
 	
 	    /* Draw the image resolution to the component */
 	    g2.drawString("Size: " + (int) img.getWidth() + "x" + (int) img.getHeight(), 1, height - 10);
+	    /* Draw the capture time to the component */
+	    g2.drawString("Framerate: " + framerate + " fps", 1, height - 22);
 	}
 	
-	/* Draw the capture time to the component */
-	g2.drawString("Captured " + ((System.currentTimeMillis() - captureTime) / 1000.0) + " sec ago", 1, 11);
     }
 }

@@ -27,8 +27,8 @@ if [ 'pack' == "$1" ]; then
     echo "Creating archive" 1>&2
     tar -czf server.tar.gz org unit
 else
-    javac org/haldean/chopper/server/ServerHost.java && \
+    javac org/haldean/chopper/server/ServerHost.java -Xlint:deprecation && \
 	echo "Compiled" 1>&2 && \
-	java -Djava.library.path=jars/worldwind/ $DOCK \
+	java -Djava.library.path=jars/worldwind/:jars/ $DOCK \
 	org.haldean.chopper.server.ServerHost -h "pices.dynalias.org:23" -d
 fi

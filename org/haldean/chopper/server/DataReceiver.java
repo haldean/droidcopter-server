@@ -53,6 +53,9 @@ public class DataReceiver implements Runnable {
     /* Should we stop the communications thread */
     private boolean stopThread;
 
+    /* This is a visual representation of our status */
+    private StatusLabel statusLabel;
+
     /** Initialize this DataReceiver object, destroying all previous state.
      *  @param _serverAddr The IP address or hostname of the transmitting server
      *  @param _dataPort The port to connect to for textual data
@@ -62,7 +65,8 @@ public class DataReceiver implements Runnable {
 	dataPort = _dataPort;
 	imgPort = _imgPort;
 
-	tied = new LinkedList<Updatable>();
+	if (tied == null)
+	    tied = new LinkedList<Updatable>();
 	stopThread = false;
 	isConnected = false;
 
@@ -77,9 +81,18 @@ public class DataReceiver implements Runnable {
 	}
     }
 
+    /** Tie the component to a status label
+     *  @param sl The status label that represents the data receiver */
+    public void setStatusLabel(StatusLabel sl) {
+	tie(sl);
+	statusLabel = sl;
+    }
+
     /** Tie an object to the DataReceiver
      *  @param u Object to update on incoming data */
     public void tie(Updatable u) {
+	if (tied == null)
+	    tied = new LinkedList<Updatable>();
 	tied.add(u);
     }
 
@@ -159,6 +172,11 @@ public class DataReceiver implements Runnable {
 	}
     }
 
+    private void setConnected(boolean _connected) {
+	isConnected = _connected;
+	statusLabel.setConnected(isConnected);
+    }
+
     /** Run the DataReceiver thread */
     public void run() {
 	Thread.currentThread().setName("Data receiver");
@@ -182,7 +200,7 @@ public class DataReceiver implements Runnable {
 
 		Debug.log("Connected");
 		
-		isConnected = true;
+		setConnected(true);
 		/* Send a line to the server telling it we've connected */
 		sendln("SERVER:HELLO");
 
@@ -197,9 +215,9 @@ public class DataReceiver implements Runnable {
 		/* Close connections. We are no longer connected */
 		dataConnection.close();
 		imgConnection.close();
-		isConnected = false;
+		setConnected(false);
 	    } catch (IOException e) {
-		isConnected = false;
+		setConnected(false);
 		e.printStackTrace();
 
 		Debug.log("Error initializing sockets: " + e.toString());
@@ -212,7 +230,7 @@ public class DataReceiver implements Runnable {
 		}
 	    } 
 	}
-	isConnected = false;
+	setConnected(false);
 	stopThread = false;
     }
 }

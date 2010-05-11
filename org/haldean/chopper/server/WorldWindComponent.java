@@ -17,6 +17,8 @@ import gov.nasa.worldwind.exception.*;
 import gov.nasa.worldwind.geom.*;
 import gov.nasa.worldwind.render.*;
 import gov.nasa.worldwind.util.*;
+import gov.nasa.worldwind.view.*;
+import gov.nasa.worldwind.view.orbit.*;
 
 /* Layer imports. */
 import gov.nasa.worldwind.layers.*;
@@ -44,6 +46,8 @@ public class WorldWindComponent extends JPanel {
 
     /* Displays status messages */
     private JButton statusLabel;
+
+    private final int maxMovePixels = 15;
 
     /** Create a new WorldWindComponent */
     public WorldWindComponent() {
@@ -157,6 +161,29 @@ public class WorldWindComponent extends JPanel {
     /** Used for TabPanes */
     public String getName() {
 	return "Globe";
+    }
+
+    /** Move the view by a given amount
+     *  @param dx Amount to move the view in the x direction
+     *  @param dy Amount to move the view in the y direction
+     *  @param dz Amount to zoom the view in and out
+     *  @param dt Amount to move the tilt of the camera
+     *  @param dp Amount of move the pan of the camera */
+    public void moveView(float dx, float dy, float dz, float dt, float dp) {
+	Dimension componentSize = wwd.getSize();
+	BasicOrbitView currentView = (BasicOrbitView) wwd.getView();
+	Position moveToPos = currentView.computePositionFromScreenPoint((int) (componentSize.getWidth() / 2 + dx * maxMovePixels),
+									(int) (componentSize.getHeight() / 2 + dy * maxMovePixels));
+	currentView.addCenterAnimator(currentView.getCenterPosition(), moveToPos, 20, true);
+	
+	double zoom = currentView.getZoom();
+	currentView.addZoomAnimator(zoom, zoom * (1 + 3 * dz));
+
+	Angle heading = Angle.fromDegrees(currentView.getHeading().getDegrees() + 45.0 * dp);
+	Angle pitch = Angle.fromDegrees(currentView.getPitch().getDegrees() + 30.0 * dt);
+	currentView.addHeadingPitchAnimator(currentView.getHeading(), heading, currentView.getPitch(), pitch);
+
+	wwd.redrawNow();
     }
 
     /** Add a waypoint, and optionally follow if the box is checked 
