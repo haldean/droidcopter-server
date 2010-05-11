@@ -161,6 +161,10 @@ public class PadController implements Runnable {
 	    sl.setGlobeMode(globeMovement);
 	    Debug.log("Globe control is now " + ((globeMovement) ? "on" : "off"));
 	}
+
+	/* In Globe Mode, B activates or disactivates follow mode */
+	if (globeMovement && buttonIsSet(mask, BUTTON_B))
+	    ui.lc.toggleFollow();
     }
 
     private float getAxis(int axis) {

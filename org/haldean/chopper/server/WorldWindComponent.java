@@ -186,6 +186,11 @@ public class WorldWindComponent extends JPanel {
 	wwd.redrawNow();
     }
 
+    /** Invert the follow variable and check box status */
+    public void toggleFollow() {
+	follow.setSelected(! follow.isSelected());
+    }
+
     /** Add a waypoint, and optionally follow if the box is checked 
      *  @param _w The position to append to the path */
     public void addWaypoint(Position _w) {
