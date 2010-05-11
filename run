@@ -29,6 +29,7 @@ if [ 'pack' == "$1" ]; then
 else
     javac org/haldean/chopper/server/ServerHost.java -Xlint:deprecation && \
 	echo "Compiled" 1>&2 && \
-	java -Djava.library.path=jars/worldwind/:jars/:/lib/ $DOCK \
-	org.haldean.chopper.server.ServerHost -h "pices.dynalias.org:23" -d
+	java -Djava.library.path=/lib/:jars/worldwind/:jars/ $DOCK -Xmx512m \
+	-Dsun.java2d.noddraw=true org.haldean.chopper.server.ServerHost \
+	-h "pices.dynalias.org:23" -d # These are the program options
 fi

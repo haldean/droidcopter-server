@@ -15,7 +15,7 @@ public class ServerHost extends JFrame {
     /* All sorts of components */
     public final DataReceiver r;
     public final WorldWindComponent lc;
-    public final TiltComponent tc;
+    public final OrientationComponent tc;
     public final ImageComponent ic;
     public final AccelerationComponent ac;
     public final Updatable status;
@@ -61,7 +61,7 @@ public class ServerHost extends JFrame {
 	else
 	    lc = null;
 
-	tc = new TiltComponent();
+	tc = new OrientationComponent();
 	ic = new ImageComponent();
 	ac = new AccelerationComponent();
 	sc = new SensorComponent();
@@ -90,7 +90,7 @@ public class ServerHost extends JFrame {
 	 * find all of the appropriate components */
 	SensorParser sp = new SensorParser();
 	sp.setWorldWindComponent(lc);
-	sp.setTiltComponent(tc);
+	sp.setOrientationComponent(tc);
 	sp.setAccelerationComponent(ac);
 	sp.setSensorComponent(sc);
 	sp.setStatusLabel(sl);

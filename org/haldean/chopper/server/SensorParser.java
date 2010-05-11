@@ -27,7 +27,8 @@ public class SensorParser implements Updatable {
     /* These are the components that are updated
      * when new data comes in */
     private WorldWindComponent wwc;
-    private TiltComponent orient;
+    private TiltComponent tilt;
+    private OrientationComponent orient;
     private AccelerationComponent accel;
     private SensorComponent sensors;
     private StatusLabel status;
@@ -43,8 +44,14 @@ public class SensorParser implements Updatable {
     }
 
     /** Set the notified tilt component 
-     *  @param _orient The tilt component to notify */
-    public void setTiltComponent(TiltComponent _orient) {
+     *  @param _tilt The tilt component to notify */
+    public void setTiltComponent(TiltComponent _tilt) {
+	tilt = _tilt;
+    }
+
+    /** Set the notified orientation component
+     *  @param _orient The orientation component to notify */
+    public void setOrientationComponent(OrientationComponent _orient) {
 	orient = _orient;
     }
 
@@ -87,7 +94,7 @@ public class SensorParser implements Updatable {
 	    Orientation o = new Orientation(new Double(parts[ROLL]),
 					    new Double(parts[TILT]),
 					    new Double(parts[PITCH]));
-	    orient.setTilt(o);
+	    orient.setOrientation(o);
 	}
 
 	/* Acceleration */
