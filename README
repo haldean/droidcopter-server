@@ -22,8 +22,8 @@ Required libraries:
         # ln -s /usr/lib/jni/libj3dcore-ogl.so /lib/
     - Add the following three jarfiles to your classpath:
         - /usr/share/java/j3dcore.jar
-	- /usr/share/java/j3dutils.jar
-	- /usr/share/java/vecmath.jar
+        - /usr/share/java/j3dutils.jar
+        - /usr/share/java/vecmath.jar
       This can be done using the following command:
         $ echo CLASSPATH\=\$CLASSPATH:/usr/share/java/j3dcore.jar:/usr/share/java/j3dutils.jar:/usr/share/java/vecmath.jar >> ~/.zshrc
       Make sure to replace ~/.zshrc with the profile for whatever shell 
