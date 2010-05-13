@@ -53,7 +53,7 @@ public class OrientationComponent extends JPanel {
 	objectRoot.addChild(rotateGroup);
 	rotateGroup.addChild(chopperModel);
 	rotateGroup.addChild(angleBehavior);
-	rotateGroup.addChild(rotator);
+	//rotateGroup.addChild(rotator);
 
 	/* Optimize! Enhance! */
 	objectRoot.compile();
@@ -65,18 +65,19 @@ public class OrientationComponent extends JPanel {
 
 	Appearance metal = new Appearance();
 	metal.setColoringAttributes(new ColoringAttributes(0.5f, 0.5f, 0.5f,
-						       ColoringAttributes.FASTEST));
+						       ColoringAttributes.SHADE_GOURAUD));
 	Appearance red = new Appearance();
 	red.setColoringAttributes(new ColoringAttributes(1.0f, 0f, 0f,
-						       ColoringAttributes.FASTEST));
+						       ColoringAttributes.SHADE_GOURAUD));
+	//red.setLineAttributes(new LineAttributes(1, LineAttributes.PATTERN_SOLID, true
 
 	Appearance green = new Appearance();
 	green.setColoringAttributes(new ColoringAttributes(0f, 1.0f, 0f,
-						       ColoringAttributes.FASTEST));
+						       ColoringAttributes.SHADE_GOURAUD));
 
 	Appearance blue = new Appearance();
 	blue.setColoringAttributes(new ColoringAttributes(1.0f, 1.0f, 0f,
-						       ColoringAttributes.FASTEST));
+						       ColoringAttributes.SHADE_GOURAUD));
 
 	/* The X bars */
 	Cylinder xbar1 = new Cylinder(0.01f, 1f, metal);
@@ -163,9 +164,14 @@ public class OrientationComponent extends JPanel {
 	}
 
 	public void processStimulus(Enumeration criteria){
-	    rotationX.rotX(angle.getTilt(Orientation.RADIANS));
+	    rotationX.rotX(- angle.getTilt(Orientation.RADIANS));
 	    rotationZ.rotZ(angle.getPitch(Orientation.RADIANS));
 	    rotationX.mul(rotationZ);
+	    
+	    Transform3D rotateY = new Transform3D();
+	    rotateY.rotY(- angle.getRoll(Orientation.RADIANS));
+	    rotationX.mul(rotateY);
+
 	    targetTG.setTransform(rotationX);
 	}
 
