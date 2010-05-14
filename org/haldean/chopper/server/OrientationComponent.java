@@ -102,6 +102,17 @@ public class OrientationComponent extends JPanel {
 	translate.set(new Vector3f(0f, -0.125f, 0f));
 	TransformGroup cylTransform = new TransformGroup(translate);
 	cylTransform.addChild(cyl);
+
+	/* The "forwards" pointing vector */
+	Cylinder forwards = new Cylinder(0.015f, 0.25f, red);
+	translate = new Transform3D();
+	translate.set(new Vector3f(0f, 0f, -0.125f));
+	Transform3D rotate = new Transform3D();
+	rotate.rotX(Math.PI / 2d);
+	translate.mul(rotate);
+	
+	TransformGroup forwardsVector = new TransformGroup(translate);
+	forwardsVector.addChild(forwards);
 	    
 	/* The "propellers" */
 	Cylinder prop1 = new Cylinder(0.03f, 0.1f, blue);
@@ -135,6 +146,7 @@ public class OrientationComponent extends JPanel {
 
 	node.addChild(grpXY);
 	node.addChild(cylTransform);
+	node.addChild(forwardsVector);
 
 	chopperRotator = new TransformGroup();
 	chopperRotator.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
@@ -159,20 +171,20 @@ public class OrientationComponent extends JPanel {
 	    angle = new Orientation(0, 0, 0);
 	}
 
-	public void initialize(){
+	public void initialize() {
 	    ;
 	}
 
-	public void processStimulus(Enumeration criteria){
+	public void processStimulus(Enumeration criteria) {
+	    Transform3D rotationY = new Transform3D();
+	    rotationY.rotY(- angle.getRoll(Orientation.RADIANS));
+
 	    rotationX.rotX(- angle.getTilt(Orientation.RADIANS));
 	    rotationZ.rotZ(angle.getPitch(Orientation.RADIANS));
-	    rotationX.mul(rotationZ);
+	    rotationY.mul(rotationZ);
+	    rotationY.mul(rotationX);
 	    
-	    Transform3D rotateY = new Transform3D();
-	    rotateY.rotY(- angle.getRoll(Orientation.RADIANS));
-	    rotationX.mul(rotateY);
-
-	    targetTG.setTransform(rotationX);
+	    targetTG.setTransform(rotationY);
 	}
 
 	public void setAngle(Orientation _angle) {

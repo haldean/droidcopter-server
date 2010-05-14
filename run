@@ -8,7 +8,6 @@ if [ 'Linux' == "$OSNAME" ]; then
 else
     DOCK='-Xdock:icon=img/logo.png -Xdock:name=HorizonServer'
 fi
-echo $DOCK
 
 clean() {
     echo "Clean old classfiles" 1>&2
