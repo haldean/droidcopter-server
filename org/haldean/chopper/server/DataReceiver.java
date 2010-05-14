@@ -4,7 +4,8 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 import java.util.zip.*;
-import javax.swing.JOptionPane;
+import javax.swing.Timer;
+import java.awt.event.*;
 
 /** A huge singleton class to receive data from the chopper that
  *  operates within its own thread */
@@ -56,6 +57,11 @@ public class DataReceiver implements Runnable {
     /* This is a visual representation of our status */
     private StatusLabel statusLabel;
 
+    /* Timeout timer */
+    private Timer timeout;
+    private final int timeoutLength = 2000;
+    private boolean receiving;
+
     /** Initialize this DataReceiver object, destroying all previous state.
      *  @param _serverAddr The IP address or hostname of the transmitting server
      *  @param _dataPort The port to connect to for textual data
@@ -79,6 +85,17 @@ public class DataReceiver implements Runnable {
 	} catch (IOException e) {
 	    e.printStackTrace();
 	}
+
+	receiving = false;
+	timeout = new Timer(timeoutLength, new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+		    receiptTimeout();
+		}
+	    });
+
+	timeout.setInitialDelay(timeoutLength);
+	timeout.setRepeats(false);
+	timeout.start();
     }
 
     /** Tie the component to a status label
@@ -108,10 +125,33 @@ public class DataReceiver implements Runnable {
     private void updateAll(String msg) {
 	/* If this message means there's an incoming image,
 	 * get ready to receive it. */
+	if (msg.startsWith("SYS"))
+	    Debug.log("MSG " + msg);
 	if (msg.startsWith("IMAGE"))
 	    receiveImage(msg);
 	for (int i=0; i<tied.size(); i++)
 	    tied.get(i).update(msg);
+	if (! msg.startsWith("SYS"))
+	    timeout.restart();
+    }
+
+    /** Called when data receipt times out */
+    private void receiptTimeout() {
+	Debug.log("Timeout");
+	updateAll("SYS:RECEIVING:NO");
+	
+	try {
+	    if (image != null)
+		image.close();
+	    image = null;
+
+	    if (imgConnection != null) {
+		imgConnection.close();
+		imgConnection = new Socket(serverAddr, imgPort);
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
     }
 
     /** Create a thread to receive an incoming image
@@ -120,8 +160,10 @@ public class DataReceiver implements Runnable {
     private void receiveImage(String msg) {
 	try {
 	    /* Create a new ObjectInputStream if it doesn't already exist. */
-	    if (image == null)
+	    if (image == null) {
 		image = new ObjectInputStream(imgConnection.getInputStream());
+		Debug.log("Created a new ObjectInputStream");
+	    }
 	} catch (IOException e) {
 	    e.printStackTrace();
 	    return;
@@ -169,6 +211,7 @@ public class DataReceiver implements Runnable {
     /** Send a line to the phone
      *  @param s The string to send to the phone */
     public void sendln(String s) {
+	System.err.println("Sending: " + s);
 	try {
 	    output.write(s + "\n");
 	    output.flush();

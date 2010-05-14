@@ -24,15 +24,6 @@ public class StatusLabel extends JPanel implements Updatable {
     public StatusLabel() {
 	super(new GridLayout(1, 4));
 
-	receiptTimer = new Timer(receivingDelay, new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-		    setReceiving(false);
-		}
-	    });
-	receiptTimer.setRepeats(false);
-	receiptTimer.setInitialDelay(receivingDelay);
-	receiptTimer.start();
-
 	globeModeLabel = new JLabel();
 	globeModeLabel.setOpaque(true);
 	globeModeLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -103,7 +94,8 @@ public class StatusLabel extends JPanel implements Updatable {
     }
 
     public void update(String s) {
-	setReceiving(true);
-	receiptTimer.restart();
+	if (s.equals("SYS:RECEIVING:NO"))
+	    setReceiving(false);
+	else setReceiving(true);
     }
 }
