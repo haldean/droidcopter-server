@@ -16,7 +16,7 @@ public class ServerHost extends JFrame {
     public final DataReceiver r;
     public final WorldWindComponent lc;
     public final OrientationComponent tc;
-    public final ImageComponent ic;
+    public final ImagePanel ic;
     public final AccelerationComponent ac;
     public final Updatable status;
     public final UpdatableTextArea debug;
@@ -62,7 +62,7 @@ public class ServerHost extends JFrame {
 	    lc = null;
 
 	tc = new OrientationComponent();
-	ic = new ImageComponent();
+	ic = new ImagePanel();
 	ac = new AccelerationComponent();
 	sc = new SensorComponent();
 	status = new EchoUpdatable();
@@ -140,10 +140,6 @@ public class ServerHost extends JFrame {
     public void osInit() {
 	Debug.log("Running on " + System.getProperty("os.name") + " " + 
 		  System.getProperty("os.arch"));
-	/* 64-bit Linux can't have pretty globes */
-	if (System.getProperty("os.name").startsWith("Linux") &&
-	    System.getProperty("os.arch").startsWith("amd64"))
-	    allowGlobe = false;
 	if (System.getProperty("os.name").startsWith("Mac"))
             System.setProperty("apple.laf.useScreenMenuBar", "true");
     }
@@ -156,6 +152,7 @@ public class ServerHost extends JFrame {
 	ac.updateUI();
 	sc.updateUI();
 	lc.updateUI();
+	ic.updateUI();
 
 	/* The right/left pane creator */
 	JPanel horizontalPanel = new JPanel(new GridLayout(1,2));

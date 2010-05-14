@@ -6,8 +6,9 @@ OSNAME=`uname`
 if [ 'Linux' == "$OSNAME" ]; then
     DOCK=
 else
-    DOCK="-Xdock:name='Horizon Server' -Xdock:icon=img/logo.png"
+    DOCK='-Xdock:icon=img/logo.png -Xdock:name=HorizonServer'
 fi
+echo $DOCK
 
 clean() {
     echo "Clean old classfiles" 1>&2
@@ -29,7 +30,7 @@ if [ 'pack' == "$1" ]; then
 else
     javac org/haldean/chopper/server/ServerHost.java -Xlint:deprecation && \
 	echo "Compiled" 1>&2 && \
-	java -Djava.library.path=/lib/:jars/worldwind/:jars/ $DOCK -Xmx512m \
-	-Dsun.java2d.noddraw=true org.haldean.chopper.server.ServerHost \
-	-h "pices.dynalias.org:23" -d # These are the program options
+	java -Djava.library.path=/lib/:jars/worldwind/:jars/ -Xmx512m \
+	-Dsun.java2d.noddraw=true $DOCK org.haldean.chopper.server.ServerHost \
+	-h "pices.dynalias.org:23" -d
 fi

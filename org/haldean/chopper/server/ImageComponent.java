@@ -29,12 +29,6 @@ public class ImageComponent extends JComponent {
     /** For TabPanes */
     public String getName() {
 	return "Telemetry";
-    }
-
-    /** Set the capture time of the last received image. 
-     *  TODO: Make this work 
-     *  @param time Number of milliseconds since the start of an era */
-    public void setCaptureTime(long time) {
     }	
 
     /** Set the image displayed by the component 

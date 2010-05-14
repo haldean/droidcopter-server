@@ -9,7 +9,7 @@ public class ImageReceiver implements Runnable {
     private ObjectInputStream ostream;
     private int len;
     private long time;
-    private ImageComponent imageComp;
+    private ImagePanel imageComp;
     private Callback callback;
     
     /** Create a new ImageReceiver thread
@@ -18,13 +18,19 @@ public class ImageReceiver implements Runnable {
      *  @param _imageComp The ImageComponent to send the image to after receipt
      *  @param _callback The callback to call once the image has been received */
     public ImageReceiver(ObjectInputStream _in, String _header, 
-			 ImageComponent _imageComp, Callback _callback) {
+			 ImagePanel _imageComp, Callback _callback) 
+	throws IllegalArgumentException {
+
 	super();
 
 	/* Image headers are of the form "IMAGE:LENGTH_IN_BYTES:CAPTURE_EPOCH_TIME" */
 	String fields[] = _header.split(":");
-	len = new Integer(fields[1]);
-	time = new Long(fields[2]);
+	try {
+	    len = new Integer(fields[1]);
+	    time = new Long(fields[2]);
+	} catch (Exception e) {
+	    throw new IllegalArgumentException("Not an image receipt");
+	}
 
 	imageComp = _imageComp;
 	ostream = _in;
@@ -45,7 +51,6 @@ public class ImageReceiver implements Runnable {
 
 	    /* Set the image and the capture time of the component */
 	    imageComp.setImage(imageData);
-	    imageComp.setCaptureTime(time);
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}

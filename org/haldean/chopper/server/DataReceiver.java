@@ -45,8 +45,8 @@ public class DataReceiver implements Runnable {
 
     /* The objects to be updated on incoming text data */
     private LinkedList<Updatable> tied;
-    /* The ImageComponent to pass retrieved images to */
-    private ImageComponent imageTied;
+    /* The ImagePanel to pass retrieved images to */
+    private ImagePanel imageTied;
 
     /* Are we connected to the server? */
     private boolean isConnected;
@@ -98,8 +98,9 @@ public class DataReceiver implements Runnable {
 
     /** Tie the ImageComponent to the DataReceiver
      *  @param i Component to update with new images */
-    public void tieImage(ImageComponent i) {
+    public void tieImage(ImagePanel i) {
 	imageTied = i;
+	tied.add(i);
     }
 
     /** Update all tied classes
@@ -129,14 +130,18 @@ public class DataReceiver implements Runnable {
 	/* Create a new ImageReceiver thread that transmits a string
 	 * to the phone when it is done receiving. This will cue the phone
 	 * to send the next string */
-	ImageReceiver r = new ImageReceiver(image, msg, imageTied, new Callback() {
-		public void completed() {
-		    sendln("IMAGE:RECEIVED");
-		}
-	    });
-	Thread imgThread = new Thread(r);
-	imgThread.setName("Image receiver");
-	imgThread.start();
+	try {
+	    ImageReceiver r = new ImageReceiver(image, msg, imageTied, new Callback() {
+		    public void completed() {
+			sendln("IMAGE:RECEIVED");
+		    }
+		});
+	    Thread imgThread = new Thread(r);
+	    imgThread.setName("Image receiver");
+	    imgThread.start();
+	} catch (IllegalArgumentException e) {
+	    ;
+	}
     }
 
     /** @return True if connected to server, false if not */
