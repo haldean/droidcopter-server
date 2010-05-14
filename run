@@ -9,7 +9,7 @@ else
     DOCK='-Xdock:icon=img/logo.png -Xdock:name=HorizonServer'
 fi
 
-RUN="java -Djava.library.path=/lib/:jars/worldwind/:jars/ -Xmx512m -Dsun.java2d.noddraw=true $DOCK org.haldean.chopper.server.ServerHost -h \"pices.dynalias.org:23\" -d"
+RUN="java -Djava.library.path=/lib/:jars/worldwind/:jars/ -Xmx512m -Dsun.java2d.noddraw=true $DOCK org.haldean.chopper.server.ServerHost -h pices.dynalias.org:23 -d"
 
 echo $RUN
 
