@@ -97,7 +97,7 @@ public class ServerHost extends JFrame {
 
 	/* Tie the updatables to the DataReceiver */
 	r.tie(sp);
-	r.tie(status);
+	//	r.tie(status);
 	r.tieImage(ic);
 
 	leftTabPanes = new LinkedList<Component>();

@@ -9,11 +9,20 @@ import com.sun.j3d.utils.universe.*;
 import com.sun.j3d.utils.geometry.*;
 import java.util.*;
 
+/** A component that uses Java3D to display a 3D rendering 
+ *  of the current orientation of the chopper */
 public class OrientationComponent extends JPanel {
     TransformGroup chopperRotator;
     SetAngleBehavior angleBehavior;
 
+    /** Create a new Orientation Component */
     public OrientationComponent() {
+	this(false);
+    }
+
+    /** Create a new Orientation Component
+     *  @param rotate Rotates the model the model at a constant rate if set to true */
+    public OrientationComponent(boolean rotate) {
 	super(new GridLayout(1,1));
 	GraphicsConfiguration config = 
 	    SimpleUniverse.getPreferredConfiguration();
@@ -23,14 +32,19 @@ public class OrientationComponent extends JPanel {
 	SimpleUniverse u = new SimpleUniverse(c3d);
 	u.getViewingPlatform().setNominalViewingTransform();
 
-	u.addBranchGraph(createSceneGraph());
+	u.addBranchGraph(createSceneGraph(rotate));
     }
 
+    /** Used for Tab Panes
+     *  @return The string "Orientation" */
     public String getName() {
 	return "Orientation";
     }
 
-    private BranchGroup createSceneGraph() {
+    /** Create the scene graph to insert into the SimpleUniverse
+     *  @param rotate The object has a rotator applied to it if this is true
+     *  @return A BranchGroup containing the chopper and the rotator behavior */
+    private BranchGroup createSceneGraph(boolean rotate) {
 	BranchGroup objectRoot = new BranchGroup();
 
 	TransformGroup chopperModel = getChopperModel();
@@ -53,13 +67,17 @@ public class OrientationComponent extends JPanel {
 	objectRoot.addChild(rotateGroup);
 	rotateGroup.addChild(chopperModel);
 	rotateGroup.addChild(angleBehavior);
-	//rotateGroup.addChild(rotator);
+	if (rotate)
+	    rotateGroup.addChild(rotator);
 
 	/* Optimize! Enhance! */
 	objectRoot.compile();
 	return objectRoot;
     }
 
+    /** Get the 3D representation of the chopper
+     *  @return A TransformGroup whose transform is writeable that contains 
+     *  a 3D representation of the quadricopter */
     private TransformGroup getChopperModel() {
 	BranchGroup node = new BranchGroup();
 
@@ -155,26 +173,35 @@ public class OrientationComponent extends JPanel {
 	return chopperRotator;
     }
 
+    /** Visualize the current orientation of the chopper 
+     *  @param o The current orientation of the chopper */
     public void setOrientation(Orientation o) {
 	angleBehavior.setAngle(o);
 	angleBehavior.processStimulus(null);
     }
 
+    /** A Behavior class that allows the angle of the enclosed
+     *  TransformGroup to be arbitrarily set along all three axes */
     public class SetAngleBehavior extends Behavior {
         private TransformGroup targetTG;
         private Transform3D rotationX = new Transform3D();
 	private Transform3D rotationZ = new Transform3D();
 	private Orientation angle;
 
+	/** Create a new SetAngleBehavior 
+	 *  @param _targetTG The transform group to operate upon */
 	public SetAngleBehavior(TransformGroup _targetTG) {
 	    targetTG = _targetTG;
 	    angle = new Orientation(0, 0, 0);
 	}
 
+	/** Empty initialization */
 	public void initialize() {
 	    ;
 	}
 
+	/** Update the universe with the current angle 
+	 *  @param criteria Ignored criteria for updating */
 	public void processStimulus(Enumeration criteria) {
 	    Transform3D rotationY = new Transform3D();
 	    rotationY.rotY(- angle.getRoll(Orientation.RADIANS));
@@ -187,16 +214,20 @@ public class OrientationComponent extends JPanel {
 	    targetTG.setTransform(rotationY);
 	}
 
+	/** Set the current orientation of the chopper
+	 *  @param _angle The orientation of the chopper */
 	public void setAngle(Orientation _angle) {
 	    angle = _angle;
 	}
     }
 
+    /** Test method that displays a rotating chopper set at a constant 45
+     *  degrees along both axes */
     public static void main(String args[]) {
 	Debug.enable = true;
 	JFrame frame = new JFrame();
 	frame.setPreferredSize(new Dimension(300, 300));
-	OrientationComponent o = new OrientationComponent();
+	OrientationComponent o = new OrientationComponent(true);
 	frame.add(o);
 	frame.pack();
 	frame.setVisible(true);

@@ -3,6 +3,7 @@ package org.haldean.chopper.server;
 import net.java.games.input.*;
 import javax.swing.*;
 
+/** A thread to take input from a game pad and cue various events in the UI */
 public class PadController implements Runnable {
     private ServerHost ui;
     private Controller ctrl;
@@ -37,9 +38,11 @@ public class PadController implements Runnable {
 
     private boolean globeMovement = false;
 
-    public PadController(ServerHost _ui, StatusLabel _sl) {
+    /** Create a new PadController 
+     *  @param _ui The ServerHost to act upon */
+    public PadController(ServerHost _ui) {
 	ui = _ui;
-	sl = _sl;
+	sl = ui.sl;
 	
 	ControllerEnvironment env = ControllerEnvironment.getDefaultEnvironment();
 	Controller controllers[] = env.getControllers();
@@ -111,6 +114,7 @@ public class PadController implements Runnable {
 	}
     }
 
+    /** Get an integer bitmask representing each of the buttons */
     private int buttonMask() {
 	int mask = 0;
 	for (int i=0; i<buttons.length; i++)
@@ -119,10 +123,16 @@ public class PadController implements Runnable {
 	return mask;
     }
 
+    /** Check to see if a button is set in a bitmask 
+     *  @param mask The bitmask to check against
+     *  @param button The index of the button 
+     *  @return True if the button is depressed, false if not */
     private boolean buttonIsSet(int mask, int button) {
 	return ((mask >> button) & 1) == 1;
     }
 
+    /** Perform an action based on the status of the buttons
+     *  @param mask The mask representings buttons that have changed state */
     private void buttonAction(int mask) {
 	int currentMask = buttonMask();
 
@@ -167,28 +177,26 @@ public class PadController implements Runnable {
 	    ui.lc.toggleFollow();
     }
 
+    /** Get the value of a joystick axis, filtering out noisy results 
+     *  @param axis The index of the axis to check
+     *  @return A number from -1 to 1 representing the value of the joystick */
     private float getAxis(int axis) {
-	if (Math.abs(axes[axis].getPollData()) < 0.1)
+	if (Math.abs(axes[axis].getPollData()) < 0.2)
 	    return 0;
 	else
 	    return axes[axis].getPollData();
     }
 
-    private void updateLastAxis() {
-	for (int i=0; i<AXIS_COUNT; i++)
-	    if (axes[i] != null)
-		lastAxisValue[i] = axes[i].getPollData();
-    }
-
+    /** Trigger events based on the values of the axes */
     private void axesAction() {
 	if (globeMovement) {
 	    float zoom = getAxis(AXIS_L_TRIGGER) - getAxis(AXIS_R_TRIGGER);
 	    ui.lc.moveView(getAxis(AXIS_L_H), getAxis(AXIS_L_V), zoom, getAxis(AXIS_R_V), getAxis(AXIS_R_H));
 	}
-
-	updateLastAxis();
     }
 
+    /** Run the thread that takes input from the game pad. The thread
+     *  polls the game pad every 10ms */
     public void run() {
 	while (ctrl != null) {
 	    ctrl.poll();

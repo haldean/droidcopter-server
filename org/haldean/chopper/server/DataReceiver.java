@@ -27,6 +27,12 @@ public class DataReceiver implements Runnable {
 	return instance;
     }
 
+    /** Send a line from a static context to the server
+     *  @param s The string to send */
+    public static void sendToDefault(String s) {
+	DataReceiver.getInstance().sendln(s);
+    }
+
     /* Begin actual class */
 
     /* Server addresses and port numbers. Images are transmitted
@@ -59,7 +65,7 @@ public class DataReceiver implements Runnable {
 
     /* Timeout timer */
     private Timer timeout;
-    private final int timeoutLength = 2000;
+    private final int timeoutLength = 4000;
     private boolean receiving;
 
     /** Initialize this DataReceiver object, destroying all previous state.

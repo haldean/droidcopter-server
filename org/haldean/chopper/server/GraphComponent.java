@@ -56,7 +56,7 @@ public class GraphComponent extends JComponent {
     /** Manually set the minimum. Note that if a data point smaller than this
      *  minimum is added, the graph will automatically scale. This sets an upper
      *  bound on the actual minimum of the graph.
-     *  @param _max The upper bound for the minimum */
+     *  @param _min The upper bound for the minimum */
     public void setMin(double _min) {
 	min = _min;
 	repaint();
