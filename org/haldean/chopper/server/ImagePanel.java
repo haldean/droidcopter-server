@@ -101,7 +101,8 @@ public class ImagePanel extends JPanel implements Updatable {
     }
 
     /** Set the image shown in the preview pane
-     *  @param _image The JPEG-encoded byte array representing the image */
+     *  @param _image The JPEG-encoded byte array representing the image 
+     *  @see org.haldean.chopper.server.ImageComponent#setImage */
     public void setImage(byte _image[]) {
 	image.setImage(_image);
     }

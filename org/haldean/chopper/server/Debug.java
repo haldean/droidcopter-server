@@ -3,8 +3,16 @@ package org.haldean.chopper.server;
 /** A class to write debug information to an updatable,
  *  and optionally to write it to standard error */
 public class Debug {
+    /** Set to true to enable debugging, or false to supress 
+     *  output (defaults to false) */
     public static boolean enable = false;
     private static Updatable debugOut;
+
+    /** This class cannot be instantiated -- it can only
+     *  be accessed in a static context */
+    private Debug() {
+	;
+    }
 
     /** Set the component to update with debug messages
      *  @param d The component to update when a debug message is received */

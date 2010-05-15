@@ -9,13 +9,17 @@ else
     DOCK='-Xdock:icon=img/logo.png -Xdock:name=HorizonServer'
 fi
 
-RUN="java -Djava.library.path=/lib/:jars/worldwind/:jars/ -Xmx512m -Dsun.java2d.noddraw=true $DOCK org.haldean.chopper.server.ServerHost -h pices.dynalias.org:23 -d"
-
 clean() {
     echo "Clean old classfiles" 1>&2
     rm org/haldean/chopper/server/*.class
     echo "Clean backup java files" 1>&2
     rm org/haldean/chopper/server/*.java\~
+}
+
+run() {
+    java -Djava.library.path=/lib/:jars/worldwind/:jars/ -Xmx512m \
+	-Dsun.java2d.noddraw=true $DOCK org.haldean.chopper.server.ServerHost \
+	-h pices.dynalias.org:23 -d
 }
 
 if [ 'clean' == "$1" ]; then
@@ -30,12 +34,10 @@ elif [ 'doc' == "$1" ]; then
     javadoc -d doc/ org.haldean.chopper.server
 else
     if [ 'nobuild' == "$1" ]; then
-
-	$RUN
+	run
     else
 	clean
 	javac org/haldean/chopper/server/ServerHost.java -Xlint:deprecation && \
-	    echo "Compiled" 1>&2 && \
-	    $RUN
+	    echo "Compiled" 1>&2 && run
     fi
 fi
