@@ -50,11 +50,12 @@ public class ImageReceiver implements Runnable {
 	try {
 	    /* Read in the image from the socket */
 	    ostream.readFully(imageData);
-	    /* Call the callback once that reading is completed */
-	    callback.completed();
 
 	    /* Set the image and the capture time of the component */
 	    imageComp.setImage(imageData);
+
+	    /* Call the callback once that reading is completed */
+	    callback.completed();
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
