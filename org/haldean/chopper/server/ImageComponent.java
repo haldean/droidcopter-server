@@ -1,6 +1,7 @@
 package org.haldean.chopper.server;
 
 import java.io.*;
+import java.util.LinkedList;
 import java.awt.*;
 import java.awt.image.*;
 import java.awt.geom.*;
@@ -22,10 +23,19 @@ public class ImageComponent extends JComponent {
     private long lastCaptureTime;
     private double framerate;
 
+    private int frameCount;
+    private final int averageSamples = 30;
+    private LinkedList<Double> frameRates;
+    private double frameRateSum;
+
     /** Create an empty ImageComponent */
     public ImageComponent() {
 	transform = AffineTransform.getScaleInstance(1, 1);
 	img = null;
+
+	frameCount = 0;
+	frameRateSum = 0;
+	frameRates = new LinkedList<Double>();
     }
 
     /** For TabPanes */
@@ -42,7 +52,17 @@ public class ImageComponent extends JComponent {
 		img = ImageIO.read(new ByteArrayInputStream(_imgData));
 		imgData = _imgData;
 
-		framerate = 1.0 / ((System.currentTimeMillis() - lastCaptureTime) / 1000.0);
+		if (frameCount > 0) {
+		    framerate = 1.0 / ((System.currentTimeMillis() - lastCaptureTime) / 1000.0);
+
+		    frameRateSum += framerate;
+		    frameRates.add(new Double(framerate));
+
+		    if (frameRates.size() > averageSamples)
+			frameRateSum -= frameRates.removeFirst();
+		}
+
+		frameCount++;
 		lastCaptureTime = System.currentTimeMillis();
 	    }
 	} catch (Exception e) {
@@ -77,7 +97,8 @@ public class ImageComponent extends JComponent {
 	    /* Draw the image resolution to the component */
 	    g2.drawString("Size: " + (int) img.getWidth() + "x" + (int) img.getHeight(), 1, height - 10);
 	    /* Draw the capture time to the component */
-	    g2.drawString("Framerate: " + framerate + " fps", 1, height - 22);
+	    g2.drawString("Instantaneous Framerate: " + framerate + " fps", 1, height - 22);
+	    g2.drawString("Average Framerate: " + (frameRateSum / frameRates.size()), 1, height - 34);
 	}
 	
     }

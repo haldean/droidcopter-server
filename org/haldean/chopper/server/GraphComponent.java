@@ -163,7 +163,8 @@ public class GraphComponent extends JComponent {
 	}
     }
 
-    /** Test code: draw an amplifying sine wave. Run this. It's mesmerizing. */
+    /** Test code: draw an amplifying sine wave. Run this. It's mesmerizing. 
+     *  @param args All command line arguments are ignored */
     public static void main(String args[]) {
 	JFrame f = new JFrame();
 	final GraphComponent gc = new GraphComponent("Amplifying Sine");

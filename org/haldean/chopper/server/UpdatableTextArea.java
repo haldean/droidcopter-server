@@ -43,7 +43,9 @@ public class UpdatableTextArea extends JPanel implements Updatable {
 	area.setText(area.getText() + "\n" + msg);
 	/* If the scroll lock checkbox is checked, place the scrollbar at its
 	 * vertical maximum so the textarea shows the most current data */
-	if (false && scrollLock.isSelected()) {
+	if (scrollLock.isSelected()) {
+	    scroll.getVerticalScrollBar().setValue(scroll.getVerticalScrollBar().getMaximum());
+	    /* 
 	    try {
 		SwingUtilities.invokeAndWait(new Runnable() {
 			public void run() {
@@ -52,7 +54,7 @@ public class UpdatableTextArea extends JPanel implements Updatable {
 		    });
 	    } catch (Exception e) {
 		e.printStackTrace();
-	    }
+		} */
 	}
     }
 

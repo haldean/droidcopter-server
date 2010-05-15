@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.*;
 
 /** A thread to receive an image from an ObjectInputStream
- *  and send that image to an ImageComponent 
+ *  and send that image to an ImageComponent.
  *  @author William Brown
  *  @author Benjamin Bardin */
 public class ImageReceiver implements Runnable {
@@ -14,7 +14,7 @@ public class ImageReceiver implements Runnable {
     private ImagePanel imageComp;
     private Callback callback;
     
-    /** Create a new ImageReceiver thread
+    /** Create a new ImageReceiver thread.
      *  @param _in The ObjectInputStream to read the image from
      *  @param _header The incoming image message containing the length and capture time
      *  @param _imageComp The ImageComponent to send the image to after receipt
@@ -40,7 +40,7 @@ public class ImageReceiver implements Runnable {
 	callback = _callback;
     }
 
-    /** Start the image receipt */
+    /** Start the image receipt. */
     public void run() {
 	/* Just because it's good to know */
 	Debug.log("Receiving image length " + len);

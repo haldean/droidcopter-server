@@ -260,7 +260,10 @@ public class ServerHost extends JFrame {
 	new Thread(pad).start();
     }
 
-    /** Run the chopper host */
+    /** Run the chopper host 
+     *  @param args -d enables printing debug information to the command line,
+     *  and -h followed by a hostname specifies the hostname to connect to 
+     *  @throws Exception if the provided host name is invalid */
     public static void main(String args[]) throws Exception {
 	/* Parse command line arguments */
 	String serverURI = null;
@@ -281,7 +284,8 @@ public class ServerHost extends JFrame {
 	SwingUtilities.invokeAndWait(new Runnable() {
 		public void run() {
 		    try { 
-			UIManager.setLookAndFeel("org.pushingpixels.substance.api.skin.SubstanceRavenLookAndFeel");
+			//UIManager.setLookAndFeel("org.pushingpixels.substance.api.skin.SubstanceRavenLookAndFeel");
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		    } catch (Exception e) {
 			Debug.log("Could not load LaF: " + e.toString());
 		    }

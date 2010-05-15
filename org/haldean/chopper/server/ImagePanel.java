@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.HashMap;
 
 /** A component to show an image along with image quality controls 
  *  @author William Brown */
@@ -17,6 +18,8 @@ public class ImagePanel extends JPanel implements Updatable {
     private JPanel bottomPanel;
 
     private final int defaultQuality = 25;
+
+    private HashMap<Integer, ImageSizeEntry> sizes;
 
     /** Create a new Image Panel*/
     public ImagePanel() {
@@ -67,6 +70,8 @@ public class ImagePanel extends JPanel implements Updatable {
 
 	image = new ImageComponent();
 	add(image, BorderLayout.CENTER);
+
+	sizes = new HashMap<Integer, ImageSizeEntry>();
     }
 
     /** Used for Tab Pane
@@ -113,14 +118,21 @@ public class ImagePanel extends JPanel implements Updatable {
     public void update(String msg) {
 	if (msg.startsWith("IMAGE:AVAILABLESIZE")) {
 	    String msgParts[] = msg.split(":");
-	    imageSizes.addItem(new ImageSizeEntry(msgParts[2], msgParts[3]));
+	    ImageSizeEntry size = new ImageSizeEntry(msgParts[2], msgParts[3]);
+	    imageSizes.addItem(size);
+	    sizes.put(size.area(), size);
+	} else if (msg.startsWith("IMAGE:PARAMS")) {
+	    String msgParts[] = msg.split(":");
+	    imageQuality.setValue(new Integer(msgParts[4]));
+	    imageSizes.setSelectedItem(sizes.get(new Integer(msgParts[2]) * 
+						 new Integer(msgParts[3])));
 	}
     }
 
     /** A class used to represent image sizes in the combo box */
     private class ImageSizeEntry {
-	int width;
-	int height;
+	public int width;
+	public int height;
 
 	/** Create a new ImageSizeEntry
 	 *  @param _w The width of the image size option
@@ -148,6 +160,12 @@ public class ImagePanel extends JPanel implements Updatable {
 	 *  @return A string of the format "WxH" */
 	public String toString() {
 	    return new String(width + "x" + height);
+	}
+
+	/** Returns the area of the image size
+	 *  @return The area (in pixels) of the image */
+	public int area() {
+	    return width * height;
 	}
     }
 }

@@ -8,7 +8,7 @@ import javax.swing.Timer;
 import java.awt.event.*;
 
 /** A huge singleton class to receive data from the chopper that
- *  operates within its own thread 
+ *  operates within its own thread.
  *  @author William Brown */
 public class DataReceiver implements Runnable {
     /* These three statements enforce singularity */
@@ -28,7 +28,7 @@ public class DataReceiver implements Runnable {
 	return instance;
     }
 
-    /** Send a line from a static context to the server
+    /** Send a line from a static context to the server.
      *  @param s The string to send */
     public static void sendToDefault(String s) {
 	DataReceiver.getInstance().sendln(s);
@@ -99,20 +99,18 @@ public class DataReceiver implements Runnable {
 		    receiptTimeout();
 		}
 	    });
-
 	timeout.setInitialDelay(timeoutLength);
 	timeout.setRepeats(false);
-	timeout.start();
     }
 
-    /** Tie the component to a status label
+    /** Tie the component to a status label.
      *  @param sl The status label that represents the data receiver */
     public void setStatusLabel(StatusLabel sl) {
 	tie(sl);
 	statusLabel = sl;
     }
 
-    /** Tie an object to the DataReceiver
+    /** Tie an object to the DataReceiver.
      *  @param u Object to update on incoming data */
     public void tie(Updatable u) {
 	if (tied == null)
@@ -120,14 +118,14 @@ public class DataReceiver implements Runnable {
 	tied.add(u);
     }
 
-    /** Tie the ImageComponent to the DataReceiver
+    /** Tie the ImageComponent to the DataReceiver.
      *  @param i Component to update with new images */
     public void tieImage(ImagePanel i) {
 	imageTied = i;
 	tied.add(i);
     }
 
-    /** Update all tied classes
+    /** Update all tied classes.
      *  @param msg The received message */
     private void updateAll(String msg) {
 	/* If this message means there's an incoming image,
@@ -138,30 +136,38 @@ public class DataReceiver implements Runnable {
 	    receiveImage(msg);
 	for (int i=0; i<tied.size(); i++)
 	    tied.get(i).update(msg);
-	if (! msg.startsWith("SYS"))
+	if (! msg.startsWith("SYS")) {
 	    timeout.restart();
-    }
-
-    /** Called when data receipt times out */
-    private void receiptTimeout() {
-	Debug.log("Timeout");
-	updateAll("SYS:RECEIVING:NO");
-	
-	try {
-	    if (image != null)
-		image.close();
-	    image = null;
-
-	    if (imgConnection != null) {
-		imgConnection.close();
-		imgConnection = new Socket(serverAddr, imgPort);
-	    }
-	} catch (Exception e) {
-	    e.printStackTrace();
+	    if (! receiving)
+		onReceiving();
+	    receiving = true;
 	}
     }
 
-    /** Create a thread to receive an incoming image
+    /** Called when data receipt times out. */
+    private void receiptTimeout() {
+	Debug.log("Chopper Timed Out");
+	updateAll("SYS:RECEIVING:NO");
+	
+	if (receiving) {
+	    try {
+		if (image != null)
+		    image.close();
+		image = null;
+
+		if (imgConnection != null) {
+		    Debug.log("Closing image sockets");
+		    imgConnection.close();
+		    imgConnection = new Socket(serverAddr, imgPort);
+		}
+	    } catch (Exception e) {
+		e.printStackTrace();
+	    }
+	}
+	receiving = false;
+    }
+
+    /** Create a thread to receive an incoming image.
      *  @param msg The image incoming message. This is necessary because it contains the
      *             length of the image to be received */
     private void receiveImage(String msg) {
@@ -193,13 +199,13 @@ public class DataReceiver implements Runnable {
 	}
     }
 
-    /** Returns the status of the connection
+    /** Returns the status of the connection.
      *  @return True if connected to server, false if not */
     public boolean connected() {
 	return isConnected;
     }
 
-    /** Tell the DataReceiver to break its connection to the server */
+    /** Tell the DataReceiver to break its connection to the server. */
     public void stop() {
 	stopThread = true;
     }
@@ -216,7 +222,7 @@ public class DataReceiver implements Runnable {
 	}
     }
 
-    /** Send a line to the phone
+    /** Send a line to the phone.
      *  @param s The string to send to the phone */
     public void sendln(String s) {
 	System.err.println("Sending: " + s);
@@ -233,7 +239,13 @@ public class DataReceiver implements Runnable {
 	statusLabel.setConnected(isConnected);
     }
 
-    /** Run the DataReceiver thread */
+    private void onReceiving() {
+	sendln("IMAGE:AVAILABLESIZES");
+	sendln("IMAGE:GET");
+	Debug.log("Receiving");
+    }
+
+    /** Run the DataReceiver thread. */
     public void run() {
 	Thread.currentThread().setName("Data receiver");
 	Debug.log("DataReceiver thread " + Thread.currentThread().getName() + " started");
