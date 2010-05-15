@@ -11,9 +11,9 @@ fi
 
 clean() {
     echo "Clean old classfiles" 1>&2
-    rm org/haldean/chopper/server/*.class
+    rm -f org/haldean/chopper/server/*.class
     echo "Clean backup java files" 1>&2
-    rm org/haldean/chopper/server/*.java\~
+    rm -f org/haldean/chopper/server/*.java\~
 }
 
 run() {
@@ -31,7 +31,7 @@ if [ 'pack' == "$1" ]; then
     echo "Creating archive" 1>&2
     tar -czf server.tar.gz org unit
 elif [ 'doc' == "$1" ]; then
-    javadoc -d doc/ org.haldean.chopper.server
+    javadoc -d doc/ -author org.haldean.chopper.server
 else
     if [ 'nobuild' == "$1" ]; then
 	run

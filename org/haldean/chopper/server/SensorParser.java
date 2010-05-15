@@ -2,9 +2,9 @@ package org.haldean.chopper.server;
 
 import gov.nasa.worldwind.geom.*;
 
-/** This takes the sensor messages from the DataReceiver 
- *  and parses it, notifying the appropriate components
- *  with the new data */
+/** This takes the sensor messages from the DataReceiver and parses
+ *  it, notifying the appropriate components with the new data 
+ *  @author William Brown */
 public class SensorParser implements Updatable {
     /* The messages are all essentially flattened arrays
      * divided by colons. These constants are used to determine
@@ -27,12 +27,11 @@ public class SensorParser implements Updatable {
     /* These are the components that are updated
      * when new data comes in */
     private WorldWindComponent wwc;
-    private TiltComponent tilt;
     private OrientationComponent orient;
     private AccelerationComponent accel;
     private SensorComponent sensors;
-    private StatusLabel status;
 
+    /** Create a new SensorParser */
     public SensorParser() {
 	;
     }
@@ -41,12 +40,6 @@ public class SensorParser implements Updatable {
      *  @param _wwc The World Wind component to notify */
     public void setWorldWindComponent(WorldWindComponent _wwc) {
 	wwc = _wwc;
-    }
-
-    /** Set the notified tilt component 
-     *  @param _tilt The tilt component to notify */
-    public void setTiltComponent(TiltComponent _tilt) {
-	tilt = _tilt;
     }
 
     /** Set the notified orientation component
@@ -65,12 +58,6 @@ public class SensorParser implements Updatable {
      *  @param _sensors The sensor component to notify */
     public void setSensorComponent(SensorComponent _sensors) {
 	sensors = _sensors;
-    }
-
-    /** Set the notified status label
-     *  @param _status The status label to notify on battery updates */
-    public void setStatusLabel(StatusLabel _status) {
-	status = _status;
     }
 
     /** Update the components with new data 

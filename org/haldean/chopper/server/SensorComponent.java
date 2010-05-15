@@ -4,7 +4,8 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
-/** A component to display graphs of on-board sensors */
+/** A component to display graphs of on-board sensors 
+ *  @author William Brown */
 public class SensorComponent extends JPanel {
     /* Graphs and labels to display magnetic flux and temperature */
     private final GraphComponent flux;

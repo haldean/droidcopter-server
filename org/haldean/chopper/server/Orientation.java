@@ -1,6 +1,7 @@
 package org.haldean.chopper.server;
 
-/** A class to represent the chopper's orientation */
+/** A class to represent the chopper's orientation 
+ *  @author William Brown */
 public class Orientation {
     private double rollRad;
     private double rollDeg;
@@ -11,7 +12,15 @@ public class Orientation {
     private double pitchRad;
     private double pitchDeg;
 
+    /** Request a return value in radians 
+     *  @see Orientation#getRoll
+     *  @see Orientation#getTilt 
+     *  @see Orientation#getPitch */
     public static final int RADIANS = 0;
+    /** Request a return value in degrees 
+     *  @see Orientation#getRoll
+     *  @see Orientation#getTilt 
+     *  @see Orientation#getPitch */
     public static final int DEGREES = 1;
 
     /** Create a new Orientation object

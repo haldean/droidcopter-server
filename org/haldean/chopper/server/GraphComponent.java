@@ -9,6 +9,7 @@ import java.awt.*;
  *  A class which draws a graph based on a series of given result sets.
  *  The graph automatically scales along the Y axis and can be manually
  *  scaled along the X axis.
+ *  @author William Brown
  */
 public class GraphComponent extends JComponent {
     private LinkedList<Double> series;

@@ -5,7 +5,8 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.util.LinkedList;
 
-/** A component to represent the different axes of acceleration */
+/** A component to represent the different axes of acceleration 
+ *  @author William Brown */
 public class AccelerationComponent extends JPanel {
     /* The graphs for each axis of acceleration */
     private final GraphComponent xAccel;

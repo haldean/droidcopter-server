@@ -10,7 +10,8 @@ import com.sun.j3d.utils.geometry.*;
 import java.util.*;
 
 /** A component that uses Java3D to display a 3D rendering 
- *  of the current orientation of the chopper */
+ *  of the current orientation of the chopper 
+ *  @author William Brown */
 public class OrientationComponent extends JPanel {
     TransformGroup chopperRotator;
     SetAngleBehavior angleBehavior;

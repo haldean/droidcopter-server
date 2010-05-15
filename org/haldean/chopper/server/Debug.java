@@ -1,7 +1,8 @@
 package org.haldean.chopper.server;
 
 /** A class to write debug information to an updatable,
- *  and optionally to write it to standard error */
+ *  and optionally to write it to standard error 
+ *  @author William Brown */
 public class Debug {
     /** Set to true to enable debugging, or false to supress 
      *  output (defaults to false) */

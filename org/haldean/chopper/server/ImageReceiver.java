@@ -4,7 +4,9 @@ import java.io.*;
 import java.net.*;
 
 /** A thread to receive an image from an ObjectInputStream
- *  and send that image to an ImageComponent */
+ *  and send that image to an ImageComponent 
+ *  @author William Brown
+ *  @author Benjamin Bardin */
 public class ImageReceiver implements Runnable {
     private ObjectInputStream ostream;
     private int len;
@@ -16,7 +18,8 @@ public class ImageReceiver implements Runnable {
      *  @param _in The ObjectInputStream to read the image from
      *  @param _header The incoming image message containing the length and capture time
      *  @param _imageComp The ImageComponent to send the image to after receipt
-     *  @param _callback The callback to call once the image has been received */
+     *  @param _callback The callback to call once the image has been received 
+     *  @throws IllegalArgumentException when the supplied header is not a valid image receipt */
     public ImageReceiver(ObjectInputStream _in, String _header, 
 			 ImagePanel _imageComp, Callback _callback) 
 	throws IllegalArgumentException {
@@ -37,6 +40,7 @@ public class ImageReceiver implements Runnable {
 	callback = _callback;
     }
 
+    /** Start the image receipt */
     public void run() {
 	/* Just because it's good to know */
 	Debug.log("Receiving image length " + len);

@@ -7,7 +7,9 @@ import java.awt.geom.*;
 import javax.swing.*;
 import javax.imageio.*;
 
-/** A component to display images */
+/** A component to display images 
+ *  @author William Brown
+ *  @author Benjamin Bardin */
 public class ImageComponent extends JComponent {
     private final Color background = new Color(28, 25, 20);
     private final Color labelColor = Color.WHITE;

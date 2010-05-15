@@ -4,7 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 
 /** A component to show the orientation in three axes
- *  of the chopper */
+ *  of the chopper. This is a series of 2D projections
+ *  unlike {@link OrientationComponent}, which uses a single
+ *  3D rendering.
+ *  @deprecated Use {@link OrientationComponent} instead 
+ *  @author William Brown */
 public class TiltComponent extends JComponent {
     /* The current orientation */
     private Orientation tilt;

@@ -110,6 +110,12 @@ public class StatusLabel extends JPanel implements Updatable {
     public void update(String s) {
 	if (s.equals("SYS:RECEIVING:NO"))
 	    setReceiving(false);
-	else setReceiving(true);
+	else {
+	    setReceiving(true);
+	    if (s.startsWith("BATTERY")) {
+		String parts[] = s.split(":");
+		setBattery(new Double(parts[1]));
+	    }
+	}
     }
 }

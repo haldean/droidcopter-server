@@ -3,12 +3,14 @@ package org.haldean.chopper.server;
 import net.java.games.input.*;
 import javax.swing.*;
 
-/** A thread to take input from a game pad and cue various events in the UI */
+/** A thread to take input from a game pad and cue various events in the UI 
+ *  @author William Brown */
 public class PadController implements Runnable {
     private ServerHost ui;
     private Controller ctrl;
     private StatusLabel sl;
 
+    /* The array of buttons and the array index for each */
     private Component buttons[];
     private final int BUTTON_A = 0;
     private final int BUTTON_B = 1;
@@ -23,6 +25,7 @@ public class PadController implements Runnable {
     private final int JOYSTICK_R = 10;
     private final int BUTTON_COUNT = 11;
 
+    /* The array of axes and the array index for each */
     private Component axes[];
     private float lastAxisValue[];
     private final int AXIS_L_H = 0;

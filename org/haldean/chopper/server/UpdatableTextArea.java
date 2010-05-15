@@ -3,7 +3,8 @@ package org.haldean.chopper.server;
 import java.awt.*;
 import javax.swing.*;
 
-/** A component that contains a TextArea that can be updated */
+/** A component that contains a TextArea that can be updated 
+ *  @author William Brown */
 public class UpdatableTextArea extends JPanel implements Updatable {
     private JTextArea area;
     private JScrollPane scroll;

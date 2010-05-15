@@ -26,7 +26,8 @@ import gov.nasa.worldwind.layers.placename.*;
 import gov.nasa.worldwind.layers.Earth.*;
 
 /** A component that shows a globe with the chopper's path, along with
- *  some basic following and location-setting controls */
+ *  some basic following and location-setting controls 
+ *  @author William Brown */
 public class WorldWindComponent extends JPanel {
     /* The WorldWind component. */
     private final WorldWindowGLCanvas wwd;
@@ -223,7 +224,8 @@ public class WorldWindComponent extends JPanel {
 	    followPane.updateUI();
     }
 
-    /** Test code. Take off from Nussbaum and fly West */
+    /** Test code that simulates a flight in which the chopper 
+     *  takes off from Nussbaum and fly West */
     public static void main(String args[]) {
 	System.err.println("Running");
 	JFrame f = new JFrame("World Wind Test");

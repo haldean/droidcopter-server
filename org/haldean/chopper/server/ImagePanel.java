@@ -5,7 +5,8 @@ import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 
-/** A component to show an image along with image quality controls */
+/** A component to show an image along with image quality controls 
+ *  @author William Brown */
 public class ImagePanel extends JPanel implements Updatable {
     private JComboBox imageSizes;
     private JSlider imageQuality;

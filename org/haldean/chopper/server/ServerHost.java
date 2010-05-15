@@ -6,21 +6,39 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
-/** The superclass! This is the frame that encompasses everything else. */
+/** The superclass! This is the frame that encompasses everything
+ *  else. 
+ *  @author William Brown */
 public class ServerHost extends JFrame {
-    /* The chopper name. We've been changing it enough that
-     * it's just easier to have it be an easily-changable string */
+    /** The chopper name. We've been changing it enough that
+     *  it's just easier to have it be an easily-changable string */
     public final String heloName = new String("Horizon");
 
     /* All sorts of components */
+    /** The object responsible for receiving and sending
+     *  data to and from the chopper */
     public final DataReceiver r;
+    /** The component that displays the globe with tracking
+     *  data and location selection */
     public final WorldWindComponent lc;
+    /** The component that displays a 3D rendering of the 
+     *  current orientation of the chopper */
     public final OrientationComponent tc;
+    /** The component that displays telemetry and allows for
+     *  manipulation of the image quality */
     public final ImagePanel ic;
+    /** The component that displays graphs of the acceleration */
     public final AccelerationComponent ac;
+    /** An Updatable that receives all messages from the chopper
+     *  @see EchoUpdatable */
     public final Updatable status;
+    /** The text area where debug information is printed */
     public final UpdatableTextArea debug;
+    /** The component responsible for displaying sensor
+     *  data that isn't displayed by one of the other components */
     public final SensorComponent sc;
+    /** The component that displays mission-critical data like
+     *  battery levels and connection statuses */
     public final StatusLabel sl;
 
     /* Custom controllers, mostly because Will is the effing man */
@@ -30,11 +48,13 @@ public class ServerHost extends JFrame {
      * the server to connect to for data. */
     private final String hostPort[];
 
-    /* The components to put in the left and right tab
-     * panes in the UI */
+    /** The components to put in the left tab pane in the UI */
     private LinkedList<Component> leftTabPanes;
+    /** The components to put in the right tab pane in the UI */
     private LinkedList<Component> rightTabPanes;
+    /** The left tab pane */
     public JTabbedPane leftTabs;
+    /** The right tab pane */
     public JTabbedPane rightTabs;
 
     /* Whether we are allowed to create a WorldWindComponent.
@@ -114,7 +134,7 @@ public class ServerHost extends JFrame {
 	rightTabPanes.add(ac);
 	rightTabPanes.add(sc);
 
-	pad = new PadController(this, sl);
+	pad = new PadController(this);
     }
 
     /** Start accepting data */

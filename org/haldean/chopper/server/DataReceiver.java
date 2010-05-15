@@ -8,7 +8,8 @@ import javax.swing.Timer;
 import java.awt.event.*;
 
 /** A huge singleton class to receive data from the chopper that
- *  operates within its own thread */
+ *  operates within its own thread 
+ *  @author William Brown */
 public class DataReceiver implements Runnable {
     /* These three statements enforce singularity */
     private static DataReceiver instance = null;
@@ -37,9 +38,9 @@ public class DataReceiver implements Runnable {
 
     /* Server addresses and port numbers. Images are transmitted
      * over a separate socket from text, and through a different port */
-    public String serverAddr;
-    public int dataPort; 
-    public int imgPort;
+    private String serverAddr;
+    private int dataPort; 
+    private int imgPort;
     
     /* The Socket and Reader/Writer pair for textual data */
     private Socket dataConnection;
@@ -192,7 +193,8 @@ public class DataReceiver implements Runnable {
 	}
     }
 
-    /** @return True if connected to server, false if not */
+    /** Returns the status of the connection
+     *  @return True if connected to server, false if not */
     public boolean connected() {
 	return isConnected;
     }
