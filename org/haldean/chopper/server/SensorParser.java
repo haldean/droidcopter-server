@@ -97,8 +97,5 @@ public class SensorParser implements Updatable {
 
 	else if (parts[0].equals("TEMPERATURE"))
 	    sensors.setTemperature(new Double(parts[1]));
-
-	else if (parts[0].equals("BATTERY"))
-	    status.setBattery(new Double(parts[1]));
     }
 }

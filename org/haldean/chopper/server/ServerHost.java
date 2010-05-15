@@ -113,7 +113,6 @@ public class ServerHost extends JFrame {
 	sp.setOrientationComponent(tc);
 	sp.setAccelerationComponent(ac);
 	sp.setSensorComponent(sc);
-	sp.setStatusLabel(sl);
 
 	/* Tie the updatables to the DataReceiver */
 	r.tie(sp);
