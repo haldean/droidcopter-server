@@ -22,6 +22,12 @@ run() {
 	-h pices.dynalias.org:23 -d
 }
 
+doc() {
+    javadoc -d doc/ -author org.haldean.chopper.server
+    javadoc -d doc/check/ -doclet com.sun.tools.doclets.doccheck.DocCheck \
+	-docletpath jars/doccheck.jar org.haldean.chopper.server
+}
+
 if [ 'clean' == "$1" ]; then
     clean
     exit
@@ -31,7 +37,7 @@ if [ 'pack' == "$1" ]; then
     echo "Creating archive" 1>&2
     tar -czf server.tar.gz org unit
 elif [ 'doc' == "$1" ]; then
-    javadoc -d doc/ -author org.haldean.chopper.server
+    doc
 else
     if [ 'nobuild' == "$1" ]; then
 	run
