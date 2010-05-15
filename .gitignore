@@ -2,3 +2,4 @@
 *.apk
 *.#*
 *.DS_Store
+doc/*
