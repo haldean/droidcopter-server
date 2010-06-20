@@ -225,7 +225,7 @@ public class OrientationComponent extends JPanel {
     /** Test method that displays a rotating chopper set at a constant 45
      *  degrees along both axes */
     public static void main(String args[]) {
-	Debug.enable = true;
+	Debug.setEnabled(true);
 	JFrame frame = new JFrame();
 	frame.setPreferredSize(new Dimension(300, 300));
 	OrientationComponent o = new OrientationComponent(true);

@@ -6,7 +6,7 @@ package org.haldean.chopper.server;
 public class Debug {
     /** Set to true to enable debugging, or false to supress 
      *  output (defaults to false) */
-    public static boolean enable = false;
+    private static boolean enable = false;
     private static Updatable debugOut;
 
     /** This class cannot be instantiated -- it can only
@@ -19,6 +19,11 @@ public class Debug {
      *  @param d The component to update when a debug message is received */
     public static void setDebugOut(Updatable d) {
 	debugOut = d;
+    }
+
+    /** Enable or disable debugging */
+    public static void setEnabled(boolean e) {
+	enable = e;
     }
 
     /** Log a debug message

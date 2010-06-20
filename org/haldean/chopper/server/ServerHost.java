@@ -44,10 +44,6 @@ public class ServerHost extends JFrame {
     /* Custom controllers, mostly because Will is the effing man */
     private final PadController pad;
 
-    /* The string of the form hostname:port representing
-     * the server to connect to for data. */
-    private final String hostPort[];
-
     /** The components to put in the left tab pane in the UI */
     private LinkedList<Component> leftTabPanes;
     /** The components to put in the right tab pane in the UI */
@@ -65,7 +61,7 @@ public class ServerHost extends JFrame {
     /** Create a new ServerHost
      *  @param s The server address and port in the form hostname:port. If passed null,
      *           it will automatically show a JOptionPane to ask for one */
-    public ServerHost(String s) {
+    public ServerHost() {
 	super();
 	/* Set the title of the JFrame */
 	setTitle(heloName + " Control Server");
@@ -93,18 +89,6 @@ public class ServerHost extends JFrame {
 
 	/* Sets the output for all the glorious error messages */
 	Debug.setDebugOut(debug);
-
-	/* If a hostPortString wasn't passed in, ask for one */
-	String hostPortString;
-	if (s == null)
-	    hostPortString = JOptionPane.showInputDialog("Hostname and port of server machine");
-	else
-	    hostPortString = s;
-
-	/* Split it on the colon and initialize the DataReceiver. The image port is
-	 * assumed to be one greater than the data port */
-	hostPort = hostPortString.split(":");
-	r.initialize(hostPort[0], new Integer(hostPort[1]), new Integer(hostPort[1]) + 1);
 
 	/* Create the sensor parser and tell it where to
 	 * find all of the appropriate components */
@@ -203,7 +187,7 @@ public class ServerHost extends JFrame {
 
 	/* The status bar */
 	JPanel statusPanel = new JPanel(new FlowLayout());
-	statusPanel.add(new JLabel(hostPort[0] + ":" + hostPort[1]));
+	statusPanel.add(new JLabel(ServerCreator.getServer()));
 
 	/* The disconnect button */
 	final JButton disconnectButton = new JButton("Disconnect");
@@ -258,43 +242,5 @@ public class ServerHost extends JFrame {
 	setVisible(true);
 
 	new Thread(pad).start();
-    }
-
-    /** Run the chopper host 
-     *  @param args -d enables printing debug information to the command line,
-     *  and -h followed by a hostname specifies the hostname to connect to 
-     *  @throws Exception if the provided host name is invalid */
-    public static void main(String args[]) throws Exception {
-	/* Parse command line arguments */
-	String serverURI = null;
-	Debug.enable = false;
-
-	for (int i=0; i<args.length; i++) {
-	    if (args[i].startsWith("-d"))
-		Debug.enable = true;
-	    if (args[i].startsWith("-h"))
-		serverURI = args[++i];
-	}
-
-	/* Initialize the server host */
-	final ServerHost s = new ServerHost(serverURI);
-	s.osInit();
-
-      	/* Set Look and Feel */
-	SwingUtilities.invokeAndWait(new Runnable() {
-		public void run() {
-		    try { 
-			//UIManager.setLookAndFeel("org.pushingpixels.substance.api.skin.SubstanceRavenLookAndFeel");
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		    } catch (Exception e) {
-			Debug.log("Could not load LaF: " + e.toString());
-		    }
-		    /* Show the frame */
-		    s.start();
-		}
-	    });
-
-	/* Start the DataReceiver thread */
-	s.accept();
     }
 }
